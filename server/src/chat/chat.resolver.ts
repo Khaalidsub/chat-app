@@ -9,8 +9,8 @@ export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
   @Query(() => Message)
-  getMessage() {
-    return { name: 'khaalid', message: 'hello' };
+  getMessages(@Args('id') chatId: string) {
+    return this.chatService.displayMessage(chatId);
   }
 
   //get message from client
@@ -19,11 +19,15 @@ export class ChatResolver {
   async sendMessage(
     @Args('message', { type: () => Message }) message: Message,
   ) {
-    this.pubSub.publish('messageAdded', { messageAdded: message });
+    this.chatService.addMessage(message);
+    this.pubSub.publish('messageAdded', {
+      messageAdded: this.chatService.displayMessage(message.chatId),
+    });
+
     return message;
   }
   //recieve and display anything that is called messageAdded
-  @Subscription(() => Message)
+  @Subscription(() => [Message])
   async messageAdded() {
     return this.pubSub.asyncIterator('messageAdded');
   }

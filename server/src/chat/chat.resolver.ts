@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { ChatService } from './chat.service';
 import { Message } from './models/message.entity';
+import { User } from './models/user.entity';
 
 @Resolver(() => Message)
 export class ChatResolver {
@@ -26,6 +27,12 @@ export class ChatResolver {
 
     return message;
   }
+
+  @Mutation(() => User)
+  async addUser() {}
+
+  @Mutation(() => User)
+  async subscribe() {}
   //recieve and display anything that is called messageAdded
   @Subscription(() => [Message])
   async messageAdded() {

@@ -16,9 +16,9 @@ type Chat {
 }
 
 type Message {
-  chat: String!
+  chat: Chat!
   message: String!
-  sender: String!
+  sender: User!
 }
 
 input ChatUser {

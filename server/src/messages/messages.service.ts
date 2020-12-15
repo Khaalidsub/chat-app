@@ -16,7 +16,7 @@ export class MessagesService {
   }
 
   findAll() {
-    return this.MessageModel.find().exec();
+    return this.MessageModel.find().populate('chat').populate('sender').exec();
   }
 
   findOne(query) {

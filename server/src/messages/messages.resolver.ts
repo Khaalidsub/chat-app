@@ -28,7 +28,7 @@ export class MessagesResolver {
     this.pubSub.publish('messageAdded', {
       messageAdded: messages,
     });
-    return message;
+    return message; //!auto populate  problem, requires plugin fix
   }
 
   @Query(() => [Message], { name: 'messages' })
@@ -57,6 +57,7 @@ export class MessagesResolver {
   }
 
   //send messages to everyone once recieved
+  //! Todo : restrict the message to chats
   @Subscription(() => [Message])
   async messageAdded() {
     return this.pubSub.asyncIterator('messageAdded');

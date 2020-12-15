@@ -24,14 +24,23 @@ export class MessagesResolver {
   @UseGuards(GqlAuthGuard)
   async sendMessage(
     @Args('createMessageInput') createMessageInput: CreateMessageInput,
-    @CurrentUser() user: User,
+    @CurrentUser() currentUser: User,
   ) {
-    const message = await this.messagesService.create(createMessageInput);
+    const newMessage = await this.messagesService.create(createMessageInput);
+    const message = await (
+      await this.messagesService.findById(newMessage.id)
+    ).execPopulate();
 
-    this.pubSub.publish(`messageAdded${user.id}`, {
-      messageAdded: message,
-    });
-    return this.messagesService.findById(message.id); //!auto populate  problem, requires plugin fix
+    for (const user of message.chat.users) {
+      console.log('users message :', user);
+      if (user.email !== currentUser.email) {
+        this.pubSub.publish(`messageAdded:${user.email}`, {
+          messageAdded: message,
+        });
+      }
+    }
+
+    return this.messagesService.findById(message.id);
   }
 
   @Query(() => [Message], { name: 'messages' })
@@ -64,6 +73,6 @@ export class MessagesResolver {
   @Subscription(() => Message)
   @UseGuards(GqlAuthGuard)
   async messageAdded(@CurrentUser() user: User) {
-    return this.pubSub.asyncIterator(`messageAdded:${user.id}`);
+    return this.pubSub.asyncIterator(`messageAdded:${user.email}`);
   }
 }

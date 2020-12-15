@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MessagesModule } from './messages/messages.module';
 import { Chat, ChatSchema } from './chat/schemas/chat.schema';
+import { autoPopulateAllFields } from './utils';
 
 @Module({
   imports: [
@@ -24,7 +25,9 @@ import { Chat, ChatSchema } from './chat/schemas/chat.schema';
     }),
     MongooseModule.forRoot('mongodb://mongodb/chat-system', {
       connectionFactory: (connection) => {
-        connection.plugin(require('mongoose-autopopulate'));
+        connection.plugin(autoPopulateAllFields);
+        // console.log(connection.plugin(require('mongoose-autopopulate')));
+
         return connection;
       },
     }), //! not working , needs to be checked

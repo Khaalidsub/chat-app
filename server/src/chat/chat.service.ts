@@ -15,7 +15,7 @@ export class ChatService {
   }
 
   findAll() {
-    return this.ChatModel.find().populate('users').exec();
+    return this.ChatModel.find().exec();
   }
 
   findOne(id: string) {

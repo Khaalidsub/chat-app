@@ -15,7 +15,7 @@ import { Chat, ChatSchema } from './chat/schemas/chat.schema';
       context: ({ req }) => ({ req }),
       installSubscriptionHandlers: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      include: [ChatModule, UsersModule, MessagesModule],
+      include: [ChatModule, UsersModule, MessagesModule, AuthModule],
     }),
     MongooseModule.forRoot('mongodb://localhost/chat-system', {
       connectionFactory: (connection) => {
@@ -24,7 +24,7 @@ import { Chat, ChatSchema } from './chat/schemas/chat.schema';
       },
     }), //! not working , needs to be checked
 
-    forwardRef(() => ChatModule),
+    ChatModule,
     UsersModule,
     AuthModule,
     MessagesModule,

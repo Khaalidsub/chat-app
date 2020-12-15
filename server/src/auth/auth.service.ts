@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthInput } from './dto/create-auth.input';
-import { UpdateAuthInput } from './dto/update-auth.input';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt/dist/jwt.service';
+import { CreateUserInput } from '../users/dto/create-user.input';
+
+import { UserDocument } from '../users/schemas/user.schema';
+import { UsersService } from '../users/users.service';
+import { ICredential } from './types';
 
 @Injectable()
 export class AuthService {
-  create(createAuthInput: CreateAuthInput) {
-    return 'This action adds a new auth';
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
+
+  async validateUser(credential: ICredential): Promise<UserDocument | any> {
+    const user = await this.usersService.findOne({ email: credential.email });
+    if (user && user.email === credential.email) {
+      const { email, ...result } = user;
+      result.id = user._id;
+      return result;
+    }
+    return 'Wrong Email !';
+  }
+  async login(payload: any) {
+    return this.jwtService.sign(payload);
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async validateEmail(user: CreateUserInput) {
+    const findUser = await this.usersService.findOne({ email: user.email });
+
+    if (findUser) {
+      throw new HttpException('Email Already Exists!', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthInput: UpdateAuthInput) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async validateToken(id: string) {
+    return this.usersService.findById(id);
   }
 }

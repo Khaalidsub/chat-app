@@ -12,14 +12,12 @@ import { MongooseModule } from '@nestjs/mongoose';
     GraphQLModule.forRoot({
       context: ({ req }) => ({ req }),
       installSubscriptionHandlers: true,
-      autoSchemaFile: true,
-      include: [ChatModule],
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      include: [ChatModule, UsersModule],
     }),
     MongooseModule.forRoot('mongodb://localhost/chat-system'),
     forwardRef(() => ChatModule),
-
     UsersModule,
-
     AuthModule,
   ],
 })

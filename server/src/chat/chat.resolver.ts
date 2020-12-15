@@ -10,6 +10,7 @@ export class ChatResolver {
   // private pubSub = new PubSub();
   constructor(private readonly chatService: ChatService) {}
 
+  @Mutation(() => Chat)
   createChat(@Args('createChatInput') createChatInput: CreateChatInput) {
     return this.chatService.create(createChatInput);
   }

@@ -1,0 +1,68 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+}
+
+type Chat {
+  id: ID!
+  chatName: String!
+  description: String!
+  users: [User!]!
+}
+
+input ChatUser {
+  id: ID!
+  username: String!
+  email: String!
+}
+
+type Query {
+  chat: [Chat!]!
+  Chat(id: String!): Chat!
+  users: [User!]!
+  user(id: String!): User!
+}
+
+type Mutation {
+  createChat(createChatInput: CreateChatInput!): Chat!
+  updateChat(updateChatInput: UpdateChatInput!): Chat!
+  removeChat(id: String!): Chat!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: String!): User!
+}
+
+input CreateChatInput {
+  """Chat Name"""
+  ChatName: String!
+
+  """Description of the chat"""
+  description: String!
+  users: [String!]!
+}
+
+input UpdateChatInput {
+  """Chat Name"""
+  ChatName: String
+
+  """Description of the chat"""
+  description: String
+  users: [String!]
+  id: ID!
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+}
+
+input UpdateUserInput {
+  username: String
+  email: String
+  id: ID!
+}

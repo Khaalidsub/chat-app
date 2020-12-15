@@ -8,6 +8,6 @@ export class CreateChatInput {
   @Field(() => String, { description: 'Description of the chat' })
   description: string;
 
-  @Field(() => [User])
-  users: User[];
+  @Field(() => [String])
+  users: string[];
 }

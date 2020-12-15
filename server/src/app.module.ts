@@ -12,7 +12,12 @@ import { Chat, ChatSchema } from './chat/schemas/chat.schema';
 @Module({
   imports: [
     GraphQLModule.forRoot({
-      context: ({ req }) => ({ req }),
+      context: ({ req, connection }) => {
+        if (connection?.context) {
+          return { req: { headers: connection.context } };
+        }
+        return req;
+      },
       installSubscriptionHandlers: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       include: [ChatModule, UsersModule, MessagesModule, AuthModule],

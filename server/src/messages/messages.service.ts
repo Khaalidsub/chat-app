@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Chat } from 'src/chat/schemas/chat.schema';
 import { CreateMessageInput } from './dto/create-Message.input';
 import { Message, MessageDocument } from './schemas/Message.schema';
 
@@ -10,13 +11,20 @@ export class MessagesService {
     @InjectModel(Message.name) private MessageModel: Model<MessageDocument>,
   ) {}
 
-  create(Message: CreateMessageInput) {
+  async create(Message: CreateMessageInput) {
     const createdMessage = new this.MessageModel(Message);
-    return createdMessage.save();
+    return (await createdMessage.save()).populate('sender').populate('chat');
   }
 
   findAll() {
     return this.MessageModel.find().populate('chat').populate('sender').exec();
+  }
+
+  getCurrentMessagesChat(chatId: Chat) {
+    return this.MessageModel.find({ chat: chatId })
+      .populate('chat')
+      .populate('sender')
+      .exec();
   }
 
   findOne(query) {
@@ -24,7 +32,10 @@ export class MessagesService {
   }
 
   findById(id: string) {
-    return this.MessageModel.findById(id).exec();
+    return this.MessageModel.findById(id)
+      .populate('sender')
+      .populate('chat')
+      .exec();
   }
 
   update(id: string, data: any) {

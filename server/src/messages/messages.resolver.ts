@@ -11,6 +11,9 @@ import { Message } from './entities/message.entity';
 import { CreateMessageInput } from './dto/create-message.input';
 import { UpdateMessageInput } from './dto/update-message.input';
 import { PubSub } from 'apollo-server-express';
+import { CurrentUser, GqlAuthGuard } from 'src/auth/guards/graph-auth.guard';
+import { User } from 'src/users/entities/user.entity';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Message)
 export class MessagesResolver {
@@ -18,17 +21,21 @@ export class MessagesResolver {
   constructor(private readonly messagesService: MessagesService) {}
 
   @Mutation(() => Message)
+  @UseGuards(GqlAuthGuard)
   async sendMessage(
     @Args('createMessageInput') createMessageInput: CreateMessageInput,
+    @CurrentUser() user: User,
   ) {
     const message = await this.messagesService.create(createMessageInput);
-    const messages = await this.messagesService.findAll();
+    const messages = await this.messagesService.getCurrentMessagesChat(
+      message.chat,
+    );
     console.log('messages', messages);
 
-    this.pubSub.publish('messageAdded', {
+    this.pubSub.publish(`messageAdded${user.id}`, {
       messageAdded: messages,
     });
-    return message; //!auto populate  problem, requires plugin fix
+    return this.messagesService.findById(message.id); //!auto populate  problem, requires plugin fix
   }
 
   @Query(() => [Message], { name: 'messages' })
@@ -57,9 +64,10 @@ export class MessagesResolver {
   }
 
   //send messages to everyone once recieved
-  //! Todo : restrict the message to chats
+
   @Subscription(() => [Message])
-  async messageAdded() {
-    return this.pubSub.asyncIterator('messageAdded');
+  @UseGuards(GqlAuthGuard)
+  async messageAdded(@CurrentUser() user: User) {
+    return this.pubSub.asyncIterator(`messageAdded:${user.id}`);
   }
 }

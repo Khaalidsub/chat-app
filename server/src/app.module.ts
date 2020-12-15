@@ -7,7 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MessagesModule } from './messages/messages.module';
-import { Chat, ChatSchema } from './chat/schemas/chat.schema';
+
 import { autoPopulateAllFields } from './utils';
 
 @Module({
@@ -23,14 +23,17 @@ import { autoPopulateAllFields } from './utils';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       include: [ChatModule, UsersModule, MessagesModule, AuthModule],
     }),
-    MongooseModule.forRoot('mongodb://mongodb/chat-system', {
-      connectionFactory: (connection) => {
-        connection.plugin(autoPopulateAllFields);
-        // console.log(connection.plugin(require('mongoose-autopopulate')));
+    MongooseModule.forRoot(
+      `mongodb://${process.env.DB || 'localhost'}/chat-system`,
+      {
+        connectionFactory: (connection) => {
+          connection.plugin(autoPopulateAllFields);
+          // console.log(connection.plugin(require('mongoose-autopopulate')));
 
-        return connection;
+          return connection;
+        },
       },
-    }), //! not working , needs to be checked
+    ), //! not working , needs to be checked
 
     ChatModule,
     UsersModule,

@@ -27,7 +27,7 @@ export class ChatResolver {
   @UseGuards(GqlAuthGuard)
   async findAll(@CurrentUser() user: User) {
     const chats = await this.chatService.findAll(user);
-    console.log('chats :', chats);
+
     return chats;
   }
 

@@ -25,7 +25,6 @@ export class MessagesResolver {
     ).execPopulate();
 
     for (const user of message.chat.users) {
-      console.log('users message :', user);
       if (user.email !== currentUser.email) {
         this.pubSub.publish(`messageAdded:${user.email}`, {
           messageAdded: message,

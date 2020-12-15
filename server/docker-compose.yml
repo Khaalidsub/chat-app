@@ -11,6 +11,7 @@ services:
     environment:
       - PORT=3000
       - SECRET="secretKey"
+      - DB=mongodb
     volumes:
       - /usr/src/app/node_modules
       - .:/usr/src/app

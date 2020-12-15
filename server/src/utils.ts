@@ -21,7 +21,6 @@ export function autoPopulateAllFields(schema: Schema) {
     if (schemaType.options.ref) paths += ' ' + pathname;
   });
 
-  console.log(arrayPaths, arrayLength);
   for (const document of arrayLength) {
     schema.pre('find', arrayHandler);
     schema.pre('findOne', arrayHandler);

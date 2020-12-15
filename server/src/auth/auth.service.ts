@@ -23,7 +23,6 @@ export class AuthService {
     if (user && user.email === credential.email) {
       const { email, ...result } = user;
       result.id = user._id;
-      console.log('in validation :', user);
 
       return result;
     } else throw new UnauthorizedException('Wrong Email');

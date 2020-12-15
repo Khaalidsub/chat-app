@@ -4,6 +4,7 @@ import { Auth } from './entities/auth.entity';
 import { User } from '../users/entities/user.entity';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CurrentUser, GqlAuthGuard } from './guards/graph-auth.guard';
+import { UserDocument } from 'src/users/schemas/user.schema';
 
 @Resolver(() => Auth)
 export class AuthResolver {
@@ -14,11 +15,13 @@ export class AuthResolver {
     @Args('email') email: string,
     @Args('username') username: string,
   ) {
-    const result = await this.authService.validateUser({ email, username });
+    const result = await this.authService.validateUser({
+      email,
+      username,
+    });
     if (result) {
       return this.authService.login({ email: email, sub: result.id });
     }
-    throw new UnauthorizedException(result);
   }
 
   @Query(() => User)

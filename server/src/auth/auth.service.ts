@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt/dist/jwt.service';
 import { CreateUserInput } from '../users/dto/create-user.input';
 
@@ -17,12 +22,11 @@ export class AuthService {
     const user = await this.usersService.findOne({ email: credential.email });
     if (user && user.email === credential.email) {
       const { email, ...result } = user;
-      // result.id = user._id;
+      result.id = user._id;
       console.log('in validation :', user);
 
       return result;
-    }
-    return 'Wrong Email !';
+    } else throw new UnauthorizedException('Wrong Email');
   }
   async login(payload: any) {
     return this.jwtService.sign(payload);

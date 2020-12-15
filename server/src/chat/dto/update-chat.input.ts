@@ -1,4 +1,4 @@
-import { CreateChatInput } from './create-Chat.input';
+import { CreateChatInput } from './create-chat.input';
 import { InputType, Field, PartialType, ID } from '@nestjs/graphql';
 
 @InputType()

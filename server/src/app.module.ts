@@ -22,7 +22,7 @@ import { Chat, ChatSchema } from './chat/schemas/chat.schema';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       include: [ChatModule, UsersModule, MessagesModule, AuthModule],
     }),
-    MongooseModule.forRoot('mongodb://localhost/chat-system', {
+    MongooseModule.forRoot('mongodb://mongodb/chat-system', {
       connectionFactory: (connection) => {
         connection.plugin(require('mongoose-autopopulate'));
         return connection;

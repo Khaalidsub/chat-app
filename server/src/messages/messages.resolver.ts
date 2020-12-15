@@ -11,7 +11,7 @@ import { Message } from './entities/message.entity';
 import { CreateMessageInput } from './dto/create-message.input';
 import { UpdateMessageInput } from './dto/update-message.input';
 import { PubSub } from 'apollo-server-express';
-import { CurrentUser, GqlAuthGuard } from 'src/auth/guards/graph-auth.guard';
+import { CurrentUser, GqlAuthGuard } from '../auth/guards/graph-auth.guard';
 import { User } from 'src/users/entities/user.entity';
 import { UseGuards } from '@nestjs/common';
 
@@ -27,13 +27,9 @@ export class MessagesResolver {
     @CurrentUser() user: User,
   ) {
     const message = await this.messagesService.create(createMessageInput);
-    const messages = await this.messagesService.getCurrentMessagesChat(
-      message.chat,
-    );
-    console.log('messages', messages);
 
     this.pubSub.publish(`messageAdded${user.id}`, {
-      messageAdded: messages,
+      messageAdded: message,
     });
     return this.messagesService.findById(message.id); //!auto populate  problem, requires plugin fix
   }
@@ -65,7 +61,7 @@ export class MessagesResolver {
 
   //send messages to everyone once recieved
 
-  @Subscription(() => [Message])
+  @Subscription(() => Message)
   @UseGuards(GqlAuthGuard)
   async messageAdded(@CurrentUser() user: User) {
     return this.pubSub.asyncIterator(`messageAdded:${user.id}`);

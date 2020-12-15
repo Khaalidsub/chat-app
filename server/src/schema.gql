@@ -94,5 +94,5 @@ input UpdateMessageInput {
 }
 
 type Subscription {
-  messageAdded: [Message!]!
+  messageAdded: Message!
 }

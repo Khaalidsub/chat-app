@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Chat } from 'src/chat/entities/chat.entity';
+import { User } from '../users/entities/user.entity';
 
 import { CreateMessageInput } from './dto/create-message.input';
 import { Message, MessageDocument } from './schemas/message.schema';
@@ -17,8 +18,8 @@ export class MessagesService {
     return createdMessage.save();
   }
 
-  findAll() {
-    return this.MessageModel.find().exec();
+  findAll(user: User) {
+    return this.MessageModel.find({ sender: user }).exec();
   }
 
   findOne(query) {
@@ -26,10 +27,7 @@ export class MessagesService {
   }
 
   findById(id: string) {
-    return this.MessageModel.findById(id)
-      .populate('sender')
-      .populate('chat')
-      .exec();
+    return this.MessageModel.findById(id).exec();
   }
 
   update(id: string, data: any) {

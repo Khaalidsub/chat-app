@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { User } from 'src/users/entities/user.entity';
 import { CreateChatInput } from './dto/create-chat.input';
 import { Chat, ChatDocument } from './schemas/chat.schema';
 
@@ -14,8 +15,8 @@ export class ChatService {
     return newChat.save();
   }
 
-  findAll() {
-    return this.ChatModel.find().exec();
+  findAll(user: User) {
+    return this.ChatModel.find({ users: user }).exec();
   }
 
   findOne(id: string) {

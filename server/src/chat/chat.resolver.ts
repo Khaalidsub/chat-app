@@ -1,5 +1,8 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
+import { CurrentUser, GqlAuthGuard } from 'src/auth/guards/graph-auth.guard';
+import { User } from 'src/users/entities/user.entity';
 import { ChatService } from './chat.service';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
@@ -11,63 +14,37 @@ export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
   @Mutation(() => Chat)
-  createChat(@Args('createChatInput') createChatInput: CreateChatInput) {
+  @UseGuards(GqlAuthGuard)
+  createChat(
+    @Args('createChatInput') createChatInput: CreateChatInput,
+    @CurrentUser() user: User,
+  ) {
+    createChatInput.users.push(user.id);
     return this.chatService.create(createChatInput);
   }
 
   @Query(() => [Chat], { name: 'chats' })
-  async findAll() {
-    const chats = await this.chatService.findAll();
+  @UseGuards(GqlAuthGuard)
+  async findAll(@CurrentUser() user: User) {
+    const chats = await this.chatService.findAll(user);
     console.log('chats :', chats);
     return chats;
   }
 
-  @Query(() => Chat, { name: 'Chat' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.chatService.findOne(id);
-  }
+  // @Query(() => Chat, { name: 'Chat' })
+  // findOne(@Args('id', { type: () => String }) id: string) {
+  //   return this.chatService.findOne(id);
+  // }
 
   @Mutation(() => Chat)
-  // @UseGuards(GqlAuthGuard, ModeratorGuard)
+  @UseGuards(GqlAuthGuard)
   updateChat(@Args('updateChatInput') updateChatInput: UpdateChatInput) {
     return this.chatService.update(updateChatInput.id, updateChatInput);
   }
 
   @Mutation(() => Chat)
-  // @UseGuards(GqlAuthGuard, ModeratorGuard)
+  @UseGuards(GqlAuthGuard)
   removeChat(@Args('id', { type: () => String }) id: string) {
     return this.chatService.remove(id);
   }
-
-  // @Query(() => Message)
-  // getMessages(@Args('id') chatId: string) {
-  //   return this.chatService.displayMessage(chatId);
-  // }
-
-  // @Query(() => [Chat])
-  // getChats(@Args('id') userId: string) {
-  //   return this.chatService.displayChats(userId);
-  // }
-
-  // //get message from client
-  // //push the message to the subscription
-  // @Mutation(() => Message)
-  // async sendMessage(
-  //   @Args('message', { type: () => Message }) message: Message,
-  // ) {
-  //   this.chatService.addMessage(message);
-  //   this.pubSub.publish('messageAdded', {
-  //     messageAdded: this.chatService.displayMessage(message.chatId),
-  //   });
-
-  //   return message;
-  // }
-
-  // @Mutation(() => User)
-  // async subscribe() {}
-  // //recieve and display anything that is called messageAdded
-  // @Subscription(() => [Message])
-  // async messageAdded() {
-  //   return this.pubSub.asyncIterator('messageAdded');
-  // }
 }

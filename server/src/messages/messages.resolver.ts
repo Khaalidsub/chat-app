@@ -1,11 +1,4 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  Int,
-  Subscription,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql';
 import { MessagesService } from './messages.service';
 import { Message } from './entities/message.entity';
 import { CreateMessageInput } from './dto/create-message.input';
@@ -13,7 +6,7 @@ import { UpdateMessageInput } from './dto/update-message.input';
 import { PubSub } from 'apollo-server-express';
 import { CurrentUser, GqlAuthGuard } from '../auth/guards/graph-auth.guard';
 import { User } from 'src/users/entities/user.entity';
-import { UseGuards } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 
 @Resolver(() => Message)
 export class MessagesResolver {
@@ -44,28 +37,43 @@ export class MessagesResolver {
   }
 
   @Query(() => [Message], { name: 'messages' })
-  findAll() {
-    return this.messagesService.findAll();
+  @UseGuards(GqlAuthGuard)
+  findAll(@CurrentUser() user: User) {
+    return this.messagesService.findAll(user);
   }
 
   @Query(() => Message, { name: 'message' })
-  findOne(@Args('id', { type: () => Int }) id: string) {
+  @UseGuards(GqlAuthGuard)
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.messagesService.findOne(id);
   }
 
   @Mutation(() => Message)
+  @UseGuards(GqlAuthGuard)
   updateMessage(
     @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
+    @CurrentUser() user: User,
   ) {
-    return this.messagesService.update(
-      updateMessageInput.id,
-      updateMessageInput,
-    );
+    if (updateMessageInput.sender.email === user.email) {
+      return this.messagesService.update(
+        updateMessageInput.id,
+        updateMessageInput,
+      );
+    }
+    throw new UnauthorizedException('You cant change this message');
   }
 
   @Mutation(() => Message)
-  removeMessage(@Args('id', { type: () => String }) id: string) {
-    return this.messagesService.remove(id);
+  @UseGuards(GqlAuthGuard)
+  async removeMessage(
+    @Args('id', { type: () => String }) id: string,
+    @CurrentUser() user: User,
+  ) {
+    const message = await this.messagesService.findById(id);
+    if (message.sender.email === user.email) {
+      return this.messagesService.remove(id);
+    }
+    throw new UnauthorizedException('You cant delete this message');
   }
 
   //send messages to everyone once recieved

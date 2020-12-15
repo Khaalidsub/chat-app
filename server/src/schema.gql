@@ -29,12 +29,11 @@ input ChatUser {
 
 type Query {
   chats: [Chat!]!
-  Chat(id: String!): Chat!
   users: [User!]!
   user(id: String!): User!
   currentUser: User!
   messages: [Message!]!
-  message(id: Int!): Message!
+  message(id: String!): Message!
 }
 
 type Mutation {
@@ -87,10 +86,10 @@ input CreateMessageInput {
 }
 
 input UpdateMessageInput {
-  chat: String
-  message: String
-  sender: String
+  chat: String!
+  message: String!
   id: ID!
+  sender: ChatUser!
 }
 
 type Subscription {

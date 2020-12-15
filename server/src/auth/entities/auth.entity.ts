@@ -1,7 +1,10 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ICredential } from '../types';
 
 @ObjectType()
-export class Auth {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+export class Auth implements ICredential {
+  @Field(() => String)
+  email: string;
+  @Field(() => String)
+  username: string;
 }

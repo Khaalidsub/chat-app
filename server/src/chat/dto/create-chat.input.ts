@@ -1,4 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
+import { User } from 'src/users/entities/user.entity';
 
 @InputType()
 export class CreateChatInput {
@@ -6,5 +7,7 @@ export class CreateChatInput {
   ChatName: string;
   @Field(() => String, { description: 'Description of the chat' })
   description: string;
-  //! add users during the chat creation
+
+  @Field(() => [User])
+  users: User[];
 }

@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { User } from '../../users/schemas/user.schema';
 export type ChatDocument = Chat & Document;
 @Schema()
 export class Chat {
@@ -8,7 +9,7 @@ export class Chat {
   ChatName: string;
   @Prop()
   description: string;
-  //not yet completed
+
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }] })
   users: User[];
 }

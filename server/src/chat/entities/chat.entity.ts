@@ -1,5 +1,5 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { User } from './user.entity';
+import { User } from '../../users/entities/user.entity';
 
 @ObjectType()
 export class Chat {

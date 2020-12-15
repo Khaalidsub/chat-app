@@ -6,7 +6,7 @@ export class Chat {
   @Field(() => ID)
   id: string;
   @Field(() => String)
-  chatName: string;
+  ChatName: string;
   @Field(() => String)
   description: string;
   @Field(() => [User])

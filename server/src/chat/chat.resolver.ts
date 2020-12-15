@@ -15,9 +15,11 @@ export class ChatResolver {
     return this.chatService.create(createChatInput);
   }
 
-  @Query(() => [Chat], { name: 'chat' })
-  findAll() {
-    return this.chatService.findAll();
+  @Query(() => [Chat], { name: 'chats' })
+  async findAll() {
+    const chats = await this.chatService.findAll();
+    console.log('chats :', chats);
+    return chats;
   }
 
   @Query(() => Chat, { name: 'Chat' })

@@ -1,18 +1,34 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  Subscription,
+} from '@nestjs/graphql';
 import { MessagesService } from './messages.service';
 import { Message } from './entities/message.entity';
 import { CreateMessageInput } from './dto/create-message.input';
 import { UpdateMessageInput } from './dto/update-message.input';
+import { PubSub } from 'apollo-server-express';
 
 @Resolver(() => Message)
 export class MessagesResolver {
+  private pubSub = new PubSub();
   constructor(private readonly messagesService: MessagesService) {}
 
   @Mutation(() => Message)
-  sendMessage(
+  async sendMessage(
     @Args('createMessageInput') createMessageInput: CreateMessageInput,
   ) {
-    return this.messagesService.create(createMessageInput);
+    const message = await this.messagesService.create(createMessageInput);
+    const messages = await this.messagesService.findAll();
+    console.log('messages', messages);
+
+    this.pubSub.publish('messageAdded', {
+      messageAdded: messages,
+    });
+    return message;
   }
 
   @Query(() => [Message], { name: 'messages' })
@@ -38,5 +54,11 @@ export class MessagesResolver {
   @Mutation(() => Message)
   removeMessage(@Args('id', { type: () => String }) id: string) {
     return this.messagesService.remove(id);
+  }
+
+  //send messages to everyone once recieved
+  @Subscription(() => [Message])
+  async messageAdded() {
+    return this.pubSub.asyncIterator('messageAdded');
   }
 }

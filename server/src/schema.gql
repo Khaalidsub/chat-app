@@ -10,13 +10,13 @@ type User {
 
 type Chat {
   id: ID!
-  chatName: String!
+  ChatName: String!
   description: String!
   users: [User!]!
 }
 
 type Message {
-  chatId: String!
+  chat: String!
   message: String!
   sender: String!
 }
@@ -28,7 +28,7 @@ input ChatUser {
 }
 
 type Query {
-  chat: [Chat!]!
+  chats: [Chat!]!
   Chat(id: String!): Chat!
   users: [User!]!
   user(id: String!): User!
@@ -79,14 +79,18 @@ input UpdateUserInput {
 }
 
 input CreateMessageInput {
-  chatId: String!
+  chat: String!
   message: String!
   sender: String!
 }
 
 input UpdateMessageInput {
-  chatId: String
+  chat: String
   message: String
   sender: String
   id: ID!
+}
+
+type Subscription {
+  messageAdded: [Message!]!
 }

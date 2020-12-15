@@ -15,6 +15,12 @@ type Chat {
   users: [User!]!
 }
 
+type Message {
+  chatId: String!
+  message: String!
+  sender: String!
+}
+
 input ChatUser {
   id: ID!
   username: String!
@@ -26,6 +32,8 @@ type Query {
   Chat(id: String!): Chat!
   users: [User!]!
   user(id: String!): User!
+  messages: [Message!]!
+  message(id: Int!): Message!
 }
 
 type Mutation {
@@ -35,6 +43,9 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: String!): User!
+  sendMessage(createMessageInput: CreateMessageInput!): Message!
+  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
+  removeMessage(id: String!): Message!
 }
 
 input CreateChatInput {
@@ -64,5 +75,18 @@ input CreateUserInput {
 input UpdateUserInput {
   username: String
   email: String
+  id: ID!
+}
+
+input CreateMessageInput {
+  chatId: String!
+  message: String!
+  sender: String!
+}
+
+input UpdateMessageInput {
+  chatId: String
+  message: String
+  sender: String
   id: ID!
 }

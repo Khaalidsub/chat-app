@@ -14,12 +14,8 @@ services:
 #   - docker-compose up -d
 
 after_success:
-  - docker build -t sleepinglotus/chat-web ./client
-  - docker build -t sleepinglotus/chat-nginx ./nginx
-  - docker build -t sleepinglotus/chat-api ./server
+  - docker-compose up -d
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
-  - docker push sleepinglotus/chat-web
-  - docker push sleepinglotus/chat-nginx
-  - docker push sleepinglotus/chat-api
+  - docker-compose push

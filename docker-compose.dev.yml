@@ -40,8 +40,12 @@ services:
   mongodb:
     image: "mongo:4.4"
     container_name: mongodb
+    build:
+      dockerfile: ./Dockerfile.dev
+      context: ./mongo
     restart: always
-    volumes:
-      - /data/db
+    # volumes:
+    #   - /data/db
+    #   # - ./mongo/init-mongo.js /docker-entrypoint-initdb.d
     ports:
       - "27017:27017"

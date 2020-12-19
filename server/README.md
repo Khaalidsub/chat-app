@@ -1,15 +1,14 @@
-##Instructions on running Docker
+## Instructions on running Docker
 
 It has been already preconfigured and does not require any adjustment.
 
 ```
 docker-compose up -d
-
 ```
 
 **Note : the jwt secret is in the docker-compose and it is prefered to change the secret key.**
 
-##Instructions running without docker
+## Instructions running without docker
 
 You might require to install mongodb first before trying to install the application
 

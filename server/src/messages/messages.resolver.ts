@@ -20,9 +20,7 @@ export class MessagesResolver {
     @CurrentUser() currentUser: User,
   ) {
     const newMessage = await this.messagesService.create(createMessageInput);
-    const message = await (
-      await this.messagesService.findById(newMessage.id)
-    ).execPopulate();
+    const message = await this.messagesService.findById(newMessage.id);
 
     for (const user of message.chat.users) {
       if (user.email !== currentUser.email) {

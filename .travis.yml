@@ -1,0 +1,25 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+  - docker-compose
+
+# before_install:
+#   - docker build -t khaalidsubaan/react-test -f ./client/Dockerfile.dev ./client
+
+# script:
+#   - docker run -e CI=true sleepinglotus/react-test npm test
+script:
+  - docker-compose up -d
+
+after_success:
+  - docker build -t sleepinglotus/chat-web ./client
+  - docker build -t sleepinglotus/chat-nginx ./nginx
+  - docker build -t sleepinglotus/chat-api ./server
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push sleepinglotus/chat-web
+  - docker push sleepinglotus/chat-nginx
+  - docker push sleepinglotus/chat-api

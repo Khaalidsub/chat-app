@@ -17,6 +17,9 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./client
+    environment:
+      - APOLLO=api
+
   api:
     build:
       context: ./server

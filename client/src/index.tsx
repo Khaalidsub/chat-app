@@ -3,10 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+let cache = new InMemoryCache();
+const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  cache,
+  link: new HttpLink({
+    uri: `http://${process.env.APOLLO}/`,
+    headers: {
+      authorization: localStorage.getItem("token") || "",
+    },
+  }),
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+
   </React.StrictMode>,
   document.getElementById('root')
 );

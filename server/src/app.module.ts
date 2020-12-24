@@ -19,6 +19,9 @@ import { autoPopulateAllFields } from 'mongoose-autopopulator';
         return req;
       },
       installSubscriptionHandlers: true,
+      engine: {
+        apiKey: process.env.ENGINE_API_KEY,
+      },
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       include: [ChatModule, UsersModule, MessagesModule, AuthModule],
     }),

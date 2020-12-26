@@ -11,7 +11,7 @@ export interface RegisterState {
 class Register extends React.Component<RegisterProps, RegisterState> {
 
     render() {
-        return (<div></div>);
+        return (<div className=''></div>);
     }
 }
 

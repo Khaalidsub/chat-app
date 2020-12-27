@@ -10,7 +10,7 @@ function App() {
 
       {/* <Button /> */}
       <div className="h-2/3 w-4/5 mx-auto my-auto flex flex-row py-px border border-gray-50 bg-gray-50 rounded-3xl shadow-lg">
-        <div className="w-2/5">
+        <div className="w-1/4">
           <Chats />
         </div>
 

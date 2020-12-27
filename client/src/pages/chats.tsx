@@ -24,7 +24,7 @@ class Chats extends React.Component<ChatsProps, ChatsState> {
 
 
     render() {
-        return (<div className='bg-customBlue-light h-full pl-5 rounded-l-3xl'>
+        return (<div className='bg-customBlue-light h-full pl-5 rounded-l-3xl overflow-auto'>
             <SearchField />
             {this.renderChats()}
         </div>);

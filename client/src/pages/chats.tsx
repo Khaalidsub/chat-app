@@ -1,5 +1,6 @@
 import React from "react";
 import ChatCard from "../widgets/ChatCard";
+import SearchField from "../widgets/SearchField";
 
 export interface ChatsProps {
     // chats?: JSX.Element[]
@@ -23,7 +24,8 @@ class Chats extends React.Component<ChatsProps, ChatsState> {
 
 
     render() {
-        return (<div className='bg-white h-full'>
+        return (<div className='bg-blue-100 h-full'>
+            <SearchField />
             {this.renderChats()}
         </div>);
     }

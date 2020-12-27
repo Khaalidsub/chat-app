@@ -1,20 +1,16 @@
+import PropTypes from 'prop-types'
 
-
-function Button(props: ButtonProps) {
+function Button(props: any) {
     return (
-        <button onClick={() => props.handler} className="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-green-500 hover:bg-green-700">
-            {props.value}
-        </button>
+        <div>
+
+        </div>
     )
 }
 
-interface ButtonProps {
-    handler: Function,
-    value: string,
+Button.propTypes = {
 
 }
-
-
 
 export default Button
 

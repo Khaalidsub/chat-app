@@ -3,3 +3,10 @@
 @import "tailwindcss/components";
 
 @import "tailwindcss/utilities";
+html,
+body,
+#root,
+#root > div {
+  height: 100%;
+  margin: 0;
+}

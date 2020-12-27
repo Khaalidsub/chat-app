@@ -11,7 +11,7 @@ export interface ChatsState {
 class Chats extends React.Component<ChatsProps, ChatsState> {
 
     render() {
-        return (<div></div>);
+        return (<div>hello</div>);
     }
 }
 

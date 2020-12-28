@@ -9,8 +9,8 @@ function App() {
     <div className="flex justify-center">
 
       {/* <Button /> */}
-      <div className="h-2/3 w-4/5 mx-auto my-auto flex flex-row py-px border border-gray-50 bg-gray-50 rounded-3xl shadow-lg">
-        <div className="w-2/4">
+      <div className="lg:h-2/3 lg:w-4/5 sm:h-full sm:w-full mx-auto my-auto flex flex-row py-px border border-gray-50 bg-gray-50 rounded-3xl shadow-lg">
+        <div className="md:w-2/4 md:flex hidden">
           <Chats />
         </div>
 

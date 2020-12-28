@@ -8,7 +8,7 @@ let cache = new InMemoryCache();
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache,
   link: new HttpLink({
-    uri: `http://${process.env.APOLLO}/`,
+    uri: `http://${process.env.APOLLO || 'localhost:3000'}/graphql`,
     headers: {
       authorization: localStorage.getItem("token") || "",
     },

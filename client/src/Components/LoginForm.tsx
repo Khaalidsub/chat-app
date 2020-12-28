@@ -3,6 +3,7 @@ import { Component } from 'react'
 import { loginVariables } from '../utilities/__generated__/login'
 import InputFieldForm from '../widgets/InputFieldForm'
 import ButtonForm from '../widgets/ButtonForm'
+import React from 'react'
 export interface LoginProps {
     login: (a: { variables: loginVariables }) => void
 }
@@ -24,12 +25,14 @@ class LoginForm extends Component<LoginProps, LoginState>{
     }
     render() {
         return (
-            <div className="container border border-gray-50 rounded-lg ">
+            <React.Fragment>
 
                 <InputFieldForm label="username" />
                 <InputFieldForm label="email" />
-                <ButtonForm value='login' handler={this.onSubmit} />
-            </div>
+                <div className='text-center block w-full'>
+                    <ButtonForm value='login' handler={this.onSubmit} />
+                </div>
+            </React.Fragment>
         )
     }
 }

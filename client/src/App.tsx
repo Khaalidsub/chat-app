@@ -1,10 +1,23 @@
 
+import { useQuery } from '@apollo/client';
+import { useState } from 'react';
 import Chat from './pages/Chat';
 import Chats from './pages/Chats';
-import Home from './pages/Home'
-import Button from './widgets/Button';
+import Register from './pages/Register'
+import { CURRENT_USER } from './utilities/schema';
+import { currentUser } from './utilities/__generated__/currentUser';
 
 function App() {
+
+  const { loading, error } = useQuery<currentUser>(CURRENT_USER)
+  const [] = useState(false);
+
+
+  if (loading)
+    return <Register />
+  if (error)
+    <h1>{error}</h1>
+
   return (
     <div className="flex justify-center">
 

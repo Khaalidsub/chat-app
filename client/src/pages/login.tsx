@@ -1,4 +1,7 @@
+import { useMutation } from "@apollo/client";
 import React from "react";
+import { LOGIN_USER } from "../utilities/schema";
+import { loginVariables, login } from "../utilities/__generated__/login";
 
 export interface LoginProps {
 
@@ -8,11 +11,20 @@ export interface LoginState {
 
 }
 
-class Login extends React.Component<LoginProps, LoginState> {
+function Login() {
+    const [login, { loading, error }] = useMutation<login, loginVariables>(LOGIN_USER, {
+        onCompleted(data) {
+            if (data) {
+                console.log(data);
 
-    render() {
-        return (<div></div>);
-    }
+                localStorage.setItem('token', data.loginUser);
+
+            }
+        }
+    })
+
+    return (<div></div>);
+
 }
 
 export default Login;

@@ -10,10 +10,12 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   link: new HttpLink({
     uri: `http://${process.env.APOLLO || 'localhost:3000'}/graphql`,
     headers: {
-      authorization: localStorage.getItem("token") || "",
+      authorization: 'Bearer ' + localStorage.getItem("token") || "",
     },
   }),
 });
+
+
 
 ReactDOM.render(
   <React.StrictMode>

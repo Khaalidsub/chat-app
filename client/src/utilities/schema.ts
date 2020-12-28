@@ -56,6 +56,34 @@ export const CHATS = gql`
     }
   }
 `;
+
+export const MESSAGES = gql`
+  query messages {
+    messages {
+      message
+      sender {
+        id
+      }
+      chat {
+        id
+      }
+    }
+  }
+`;
+export const CHAT_MESSAGES = gql`
+  query chatMessages($id: String!) {
+    messages {
+      message
+      sender {
+        username
+        id
+      }
+      chat {
+        id
+      }
+    }
+  }
+`;
 // export const CHAT = gql`
 //   query chat {
 //     chat {

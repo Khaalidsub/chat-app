@@ -38,6 +38,11 @@ export class MessagesResolver {
   findAll(@CurrentUser() user: User) {
     return this.messagesService.findAll(user);
   }
+  @Query(() => [Message], { name: 'chatMessages' })
+  @UseGuards(GqlAuthGuard)
+  findChatMessages(@CurrentUser() user: User, @Args('id') chatId: string) {
+    return this.messagesService.findQuery({ chat: chatId });
+  }
 
   @Query(() => Message, { name: 'message' })
   @UseGuards(GqlAuthGuard)

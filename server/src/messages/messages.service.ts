@@ -22,6 +22,10 @@ export class MessagesService {
     return this.MessageModel.find({ sender: user }).exec();
   }
 
+  findQuery(query) {
+    return this.MessageModel.find(query).exec();
+  }
+
   findOne(query) {
     return this.MessageModel.findOne(query).exec();
   }

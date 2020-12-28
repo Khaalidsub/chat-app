@@ -1,4 +1,8 @@
+import { useQuery } from "@apollo/client";
 import React from "react";
+import { CHAT_MESSAGES, MESSAGES } from "../utilities/schema";
+import { chatMessages, chatMessagesVariables, chatMessages_messages } from "../utilities/__generated__/chatMessages";
+import { messages } from "../utilities/__generated__/messages";
 import Message from "../widgets/Message";
 
 export interface ChatProps {
@@ -9,11 +13,24 @@ export interface ChatState {
 
 }
 
+
+
+
 const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
-    // const { data, loading, error } = useQuery<messages>(CURRENT_USER)
+    const { data, loading, error } = useQuery<chatMessages, chatMessagesVariables>(CHAT_MESSAGES, { variables: { id: props.currentChat } })
 
 
+    const ChatMessages = () => {
+        return (
+            <React.Fragment>
+                {  data ? data.messages.map((message) => {
+
+                    return <Message color='green-100' message={message.message} user={message.sender.username} image="https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" />
+                }) : <div></div>}
+            </React.Fragment>
+        );
+    }
     return (
         <React.Fragment>
             <div className=" relative h-full">
@@ -22,12 +39,11 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
 
 
-                    <Message color='green-100' message="Hello" user="John" image="https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" />
 
 
+                    <ChatMessages />
 
-                    <Message color='white' message="Hello" user="Khaalid" image="https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" />
-                    <Message color='white' message="Hello" user="Khaalid" image="https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" />
+
 
                 </div>
 

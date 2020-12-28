@@ -1,7 +1,7 @@
-import React from "react";
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { creatUser, creatUserVariables } from '../utilities/__generated__/creatUser';
 import { CREATE_USER } from "../utilities/schema";
+import RegisterForm from "../Components/RegisterForm";
 export interface RegisterProps {
 
 }
@@ -11,20 +11,17 @@ export interface RegisterState {
 }
 
 function Register() {
-    const [register, { loading, error }] = useMutation<creatUser, creatUserVariables>(CREATE_USER, {
-        onCompleted(data) {
-            if (data) {
-                console.log(data.createUser.username);
+    const [register, { loading, error }] = useMutation<creatUser, creatUserVariables>(CREATE_USER,
+    )
+    if (loading) {
+        return <div>loading</div>
+    }
+    if (error) {
+        return <div>error</div>
+    }
 
 
-
-            }
-        }
-    })
-    // register({ variables: { createUserInput: { email: "khaalidsubaan@gmail.org", username: "khaalid" } } })
-
-
-    return (<div className=''>hello</div>);
+    return (<RegisterForm register={register} />);
 
 }
 

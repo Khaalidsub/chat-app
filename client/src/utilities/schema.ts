@@ -46,6 +46,7 @@ export const SEND_MESSAGE = gql`
 export const CHATS = gql`
   query chats {
     chats {
+      ChatName
       users {
         username
         id

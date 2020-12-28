@@ -1,9 +1,10 @@
 import React from "react";
+import { chats_chats } from "../utilities/__generated__/chats";
 import ChatCard from "../widgets/ChatCard";
 import SearchField from "../widgets/SearchField";
 
 export interface ChatsProps {
-    // chats?: JSX.Element[]
+    chats: chats_chats[]
 
 }
 
@@ -11,15 +12,13 @@ export interface ChatsState {
 
 }
 
-const chatList = [
-    ChatCard({ chat: "broChat", color: "white", lastMessage: "hello", image: "https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" }),
-    ChatCard({ chat: "broChat", color: "white", lastMessage: "hello", image: "https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" }),
-    ChatCard({ chat: "broChat", color: "white", lastMessage: "hello", image: "https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" }),
-];
+
 class Chats extends React.Component<ChatsProps, ChatsState> {
 
     renderChats() {
-        return chatList;
+        return this.props.chats.map((chat) => {
+            return ChatCard({ chat: chat.ChatName, description: chat.description, image: "https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" });
+        });
     }
 
 

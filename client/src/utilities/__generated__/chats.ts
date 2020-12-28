@@ -15,6 +15,7 @@ export interface chats_chats_users {
 
 export interface chats_chats {
   __typename: "Chat";
+  ChatName: string;
   users: chats_chats_users[];
   id: string;
   description: string;

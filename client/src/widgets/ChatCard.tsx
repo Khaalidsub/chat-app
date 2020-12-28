@@ -10,7 +10,7 @@ function ChatCard(props: ChatCardProp): JSX.Element {
                 </div>
                 <div>
                     <div className="text-xl font-medium text-gray-50">{props.chat}</div>
-                    <p className="text-gray-100">{props.lastMessage}</p>
+                    <p className="text-gray-100">{props.description}</p>
                 </div>
             </div>
         </React.Fragment>
@@ -18,10 +18,10 @@ function ChatCard(props: ChatCardProp): JSX.Element {
 }
 
 interface ChatCardProp {
-    lastMessage: string,
+    description: string,
     chat: string,
     image: string
-    color: string
+
 }
 
 

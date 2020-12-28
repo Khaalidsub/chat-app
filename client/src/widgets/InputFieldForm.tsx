@@ -25,7 +25,7 @@ function InputField(props: InputFieldProps) {
 
 interface InputFieldProps {
     label: string,
-    sample: string
+
 }
 
 

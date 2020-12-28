@@ -12,27 +12,29 @@ export interface LoginState {
     username: string
 }
 class LoginForm extends Component<LoginProps, LoginState>{
+    state = { email: '', username: '' }
 
     onChange = (event: any) => {
+
 
         this.setState({
             [event.target.name]: event.target.value
         } as LoginState);
     }
-    onSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         this.props.login({ variables: { email: this.state.email, username: this.state.username } })
     }
     render() {
         return (
-            <React.Fragment>
+            <form onSubmit={this.onSubmit}>
 
-                <InputFieldForm label="username" />
-                <InputFieldForm label="email" />
+                <InputFieldForm type="text" name="username" value={this.state.username} handler={this.onChange} label="Username" />
+                <InputFieldForm type="email" name='email' value={this.state.email} handler={this.onChange} label="Email" />
                 <div className='text-center block w-full'>
-                    <ButtonForm value='login' handler={this.onSubmit} />
+                    <ButtonForm value='login' />
                 </div>
-            </React.Fragment>
+            </form>
         )
     }
 }

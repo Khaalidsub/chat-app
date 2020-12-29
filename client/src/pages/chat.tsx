@@ -28,13 +28,13 @@ export interface chatMesagesProps {
 const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
     const [message, setMessage] = useState('');
-    console.log(props.currentChat);
+
 
     useEffect(() => {
-        console.log('hello , i have been called');
+        console.log('hello , i have been called', props.messages);
 
         props.subscribeToMore()
-    })
+    }, [props.messages])
 
 
     const [sendMessage, { loading, error }] = useMutation<sendMessage, sendMessageVariables>(SEND_MESSAGE)

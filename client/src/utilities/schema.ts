@@ -107,15 +107,15 @@ export const CURRENT_USER = gql`
 //SUBSCRIPTIONS
 
 export const MESSAGE_ADDED = gql`
-  subscription messageAdded {
-    messageAdded {
-      chat {
-        ChatName
-        id
-      }
+  subscription onChatMessage($id: String!) {
+    onChatMessage(id: $id) {
       message
+      id
       sender {
         username
+        id
+      }
+      chat {
         id
       }
     }

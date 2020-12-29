@@ -22,13 +22,9 @@ export class MessagesResolver {
     const newMessage = await this.messagesService.create(createMessageInput);
     const message = await this.messagesService.findById(newMessage.id);
 
-    for (const user of message.chat.users) {
-      if (user.email !== currentUser.email) {
-        this.pubSub.publish(`messageAdded:${user.email}`, {
-          messageAdded: message,
-        });
-      }
-    }
+    this.pubSub.publish(`onChatMessage:${createMessageInput.chat}`, {
+      onChatMessage: message,
+    });
 
     return this.messagesService.findById(message.id);
   }
@@ -84,7 +80,7 @@ export class MessagesResolver {
 
   @Subscription(() => Message)
   @UseGuards(GqlAuthGuard)
-  async messageAdded(@CurrentUser() user: User) {
-    return this.pubSub.asyncIterator(`messageAdded:${user.email}`);
+  async onChatMessage(@Args('id') chatId: string) {
+    return this.pubSub.asyncIterator(`onChatMessage:${chatId}`);
   }
 }

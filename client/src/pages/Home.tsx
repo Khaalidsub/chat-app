@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
-import React, { useState } from 'react'
-import { CHATS } from '../utilities/schema'
+import React, { useEffect, useState } from 'react'
+import { CHATS, CHAT_MESSAGES, MESSAGE_ADDED } from '../utilities/schema'
+import { chatMessages, chatMessagesVariables } from '../utilities/__generated__/chatMessages'
 import { chats } from '../utilities/__generated__/chats'
 import { currentUser_currentUser } from '../utilities/__generated__/currentUser'
 import Message from '../widgets/Message'
@@ -15,6 +16,22 @@ function Home(props: HomeProps) {
     const { data, loading, error } = useQuery<chats>(CHATS)
     const [currentChat, setCurrentChat] = useState('5fe99f1199ee428e30a092d4');
 
+    const { ...result } = useQuery<chatMessages, chatMessagesVariables>(CHAT_MESSAGES, { variables: { id: currentChat } })
+    const subscribeToNewMessages = () =>
+        result.subscribeToMore({
+            document: MESSAGE_ADDED,
+            variables: { id: currentChat },
+            updateQuery: (prev, { subscriptionData }) => {
+                if (!subscriptionData.data) return prev
+                const newMessages = subscriptionData.data.chatMessages
+                return Object.assign({}, prev, {
+                    chatMessages: [newMessages, ...prev.chatMessages]
+                });
+
+
+            }
+        })
+
     return (
         <React.Fragment>
             <div className="flex justify-center">
@@ -26,7 +43,7 @@ function Home(props: HomeProps) {
                     </div>
 
                     <div className="w-full">
-                        <Chat user={props.currentUser} currentChat={currentChat} />
+                        <Chat subscribeToMore={() => subscribeToNewMessages()} messages={result.data ? result.data.chatMessages : []} user={props.currentUser} currentChat={currentChat} />
                     </div>
 
                 </div>

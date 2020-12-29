@@ -72,7 +72,7 @@ export const MESSAGES = gql`
 `;
 export const CHAT_MESSAGES = gql`
   query chatMessages($id: String!) {
-    messages {
+    chatMessages(id: $id) {
       message
       sender {
         username

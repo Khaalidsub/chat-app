@@ -1,12 +1,15 @@
-import { useQuery } from "@apollo/client";
-import React from "react";
-import { CHAT_MESSAGES, MESSAGES } from "../utilities/schema";
+import { useMutation, useQuery } from "@apollo/client";
+import React, { useState } from "react";
+import { CHAT_MESSAGES, CURRENT_USER, MESSAGES, SEND_MESSAGE } from "../utilities/schema";
 import { chatMessages, chatMessagesVariables, chatMessages_messages } from "../utilities/__generated__/chatMessages";
+import { currentUser, currentUser_currentUser } from "../utilities/__generated__/currentUser";
 import { messages } from "../utilities/__generated__/messages";
+import { sendMessage, sendMessageVariables } from "../utilities/__generated__/sendMessage";
 import Message from "../widgets/Message";
 
 export interface ChatProps {
     currentChat: string
+    user: currentUser_currentUser
 }
 
 export interface ChatState {
@@ -18,9 +21,11 @@ export interface ChatState {
 
 const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
-    const { data, loading, error } = useQuery<chatMessages, chatMessagesVariables>(CHAT_MESSAGES, { variables: { id: props.currentChat } })
+    const [message, setMessage] = useState('');
 
+    const { data } = useQuery<chatMessages, chatMessagesVariables>(CHAT_MESSAGES, { variables: { id: props.currentChat } })
 
+    const [sendMessage, { loading, error }] = useMutation<sendMessage, sendMessageVariables>(SEND_MESSAGE)
     const ChatMessages = () => {
         return (
             <React.Fragment>
@@ -53,9 +58,10 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
                         placeholder="Message..."
                         rows={1}
+                        onChange={(e) => setMessage(e.target.value)}
 
                     ></textarea>
-                    <button className="m-2" >
+                    <button className="m-2" onClick={() => sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message, sender: props.user.id, } } })} >
                         <svg
                             className="svg-inline--fa text-customBlue-light fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2"
                             aria-hidden="true"

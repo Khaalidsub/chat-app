@@ -28,7 +28,7 @@ function App() {
   //   return <RenderSign />
 
   return (
-    data ? <Home /> : <RenderSign />
+    data ? <Home currentUser={data.currentUser} /> : <RenderSign />
 
 
   );

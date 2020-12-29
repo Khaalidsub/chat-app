@@ -2,11 +2,16 @@ import { useQuery } from '@apollo/client'
 import React, { useState } from 'react'
 import { CHATS } from '../utilities/schema'
 import { chats } from '../utilities/__generated__/chats'
+import { currentUser_currentUser } from '../utilities/__generated__/currentUser'
 import Message from '../widgets/Message'
 import Chat from './Chat'
 import Chats from './Chats'
 
-function Home() {
+export interface HomeProps {
+    currentUser: currentUser_currentUser
+}
+
+function Home(props: HomeProps) {
     const { data, loading, error } = useQuery<chats>(CHATS)
     const [currentChat, setCurrentChat] = useState('');
 
@@ -21,7 +26,7 @@ function Home() {
                     </div>
 
                     <div className="w-full">
-                        <Chat currentChat={currentChat} />
+                        <Chat user={props.currentUser} currentChat={currentChat} />
                     </div>
 
                 </div>

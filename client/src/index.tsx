@@ -3,20 +3,45 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, NormalizedCacheObject, split } from '@apollo/client';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 let cache = new InMemoryCache();
-const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  cache,
-  link: new HttpLink({
-    uri: `http://${process.env.APOLLO || 'localhost:3000'}/graphql`,
-    headers: {
+
+
+const wsLink = new WebSocketLink({
+  uri: `ws://${process.env.APOLLO || 'localhost:3000'}/graphql`,
+  options: {
+    reconnect: true,
+    connectionParams: {
       authorization: 'Bearer ' + localStorage.getItem("token") || "",
     },
-  }),
+  }
 });
 
+const httpLink = new HttpLink({
+  uri: `http://${process.env.APOLLO || 'localhost:3000'}/graphql`,
+  headers: {
+    authorization: 'Bearer ' + localStorage.getItem("token") || "",
+  },
+})
 
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+);
+const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  cache,
+  link: splitLink
 
+});
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>

@@ -74,6 +74,7 @@ export const CHAT_MESSAGES = gql`
   query chatMessages($id: String!) {
     chatMessages(id: $id) {
       message
+      id
       sender {
         username
         id

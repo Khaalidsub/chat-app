@@ -13,7 +13,7 @@ export interface HomeProps {
 
 function Home(props: HomeProps) {
     const { data, loading, error } = useQuery<chats>(CHATS)
-    const [currentChat, setCurrentChat] = useState('');
+    const [currentChat, setCurrentChat] = useState('5fe99f1199ee428e30a092d4');
 
     return (
         <React.Fragment>

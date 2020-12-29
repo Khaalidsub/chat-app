@@ -16,6 +16,7 @@ type Chat {
 }
 
 type Message {
+  id: ID!
   chat: Chat!
   message: String!
   sender: User!

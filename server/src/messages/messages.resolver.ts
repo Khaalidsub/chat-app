@@ -41,6 +41,8 @@ export class MessagesResolver {
   @Query(() => [Message], { name: 'chatMessages' })
   @UseGuards(GqlAuthGuard)
   findChatMessages(@CurrentUser() user: User, @Args('id') chatId: string) {
+    console.log('in chat', chatId);
+
     return this.messagesService.findQuery({ chat: chatId });
   }
 

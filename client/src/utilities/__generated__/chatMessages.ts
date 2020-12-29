@@ -7,26 +7,27 @@
 // GraphQL query operation: chatMessages
 // ====================================================
 
-export interface chatMessages_messages_sender {
+export interface chatMessages_chatMessages_sender {
   __typename: "User";
   username: string;
   id: string;
 }
 
-export interface chatMessages_messages_chat {
+export interface chatMessages_chatMessages_chat {
   __typename: "Chat";
   id: string;
 }
 
-export interface chatMessages_messages {
+export interface chatMessages_chatMessages {
   __typename: "Message";
   message: string;
-  sender: chatMessages_messages_sender;
-  chat: chatMessages_messages_chat;
+  id: string;
+  sender: chatMessages_chatMessages_sender;
+  chat: chatMessages_chatMessages_chat;
 }
 
 export interface chatMessages {
-  messages: chatMessages_messages[];
+  chatMessages: chatMessages_chatMessages[];
 }
 
 export interface chatMessagesVariables {

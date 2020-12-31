@@ -43,9 +43,10 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
         return (
             <React.Fragment>
                 {  props.messages.map((message) => {
-                    const color = message.sender.id === props.user.id ? 'green-100' : 'white'
+                    const current = message.sender.id === props.user.id ? true : false;
+                    const color = message.sender.id === props.user.id ? 'green-100' : 'white';
 
-                    return <Message key={message.id} color={color} message={message.message} user={message.sender.username} image="https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" />
+                    return <Message current={current} key={message.id} color={color} message={message.message} user={message.sender.username} image="https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" />
                 })}
             </React.Fragment>
         );

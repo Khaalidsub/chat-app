@@ -1,7 +1,8 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { USERS } from "../utilities/schema";
+import { CREATE_CHAT, USERS } from "../utilities/schema";
 import { chats_chats } from "../utilities/__generated__/chats";
+import { createChatVariables, createChat } from "../utilities/__generated__/createChat";
 import { users } from "../utilities/__generated__/users";
 import ChatCard from "../widgets/ChatCard";
 import SearchField from "../widgets/SearchField";
@@ -10,6 +11,7 @@ import UserCard from "../widgets/UserCard";
 export interface ChatsProps {
     chats: chats_chats[]
     onClick: Function;
+    currentUser: string
 
 }
 
@@ -23,34 +25,77 @@ export interface Chats {
 const Chats: React.FC<ChatsProps> = (props: ChatsProps) => {
     const [isCreatingChat, setisCreatingChat] = useState(false)
     const [search, setsearch] = useState('')
-    const [users, setusers] = useState([''])
+    const [users, setusers] = useState<string[]>([props.currentUser])
+    const [newChat, setNewChat] = useState('')
     const { data, loading, error } = useQuery<users>(USERS)
+    const [createChat] = useMutation<createChat, createChatVariables>(CREATE_CHAT)
+    const createChatUser = () => {
+        createChat({
+            variables: {
+                createChatInput: {
+                    ChatName: newChat,
+                    description: '',
+                    users: users
+                }
+            }
+        })
+
+
+    }
+
     const renderChats = () => {
         return props.chats.map((chat) => {
             return <ChatCard key={chat.id} onClick={props.onClick} id={chat.id} chat={chat.ChatName} description={chat.description} image={"https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80"} />;
         });
     }
     const renderUsers = () => {
-        const result = data ? data.users.filter((user) => user.email.includes(search)) : [];
+        const result = data ? data.users.filter((user) => user.email.includes(search) || users.includes(user.id)) : [];
         return result.map((user) => {
-            return <UserCard key={user.id} id={user.id} username={user.username} email={user.email} image={"https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80"} />;
+            const selected = users.find((selectedUser) => selectedUser === user.id) ? true : false;
+
+
+            return <UserCard selected={selected} onClick={() => {
+                users.find((selectedUser) => selectedUser === user.id) ?
+                    setusers(users.filter((selectedUser) => selectedUser !== user.id)) : setusers([...users, user.id])
+            }} key={user.id} id={user.id} username={user.username} email={user.email} image={"https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80"} />;
         })
     }
 
     const renderOptions = () => {
         if (isCreatingChat) {
             return <div className='bg-customBlue-light h-full pl-5 rounded-l-3xl overflow-auto w-full relative'>
-                <SearchField placeholder='enter email of user' search={search} onChange={setsearch} />
+                <div className='flex justify-between'>
+                    <button className='text-white' onClick={() => setisCreatingChat(false)}>Back</button>
+                    <SearchField placeholder='enter email of user' search={search} onChange={setsearch} />
+                </div>
+
 
                 {renderUsers()}
+                <div className='absolute bottom-0  left-0 right-0 h-14 p-2 flex justify-between justify-items-center w-full bg-customGreen'>
+                    <input
+                        className=" outline-none font-sans flex-grow py-2 px-2 rounded-full border border-gray-300 bg-gray-50"
+                        name='newChat'
+                        placeholder="New Chat Name"
+
+                        onChange={(e) => setNewChat(e.target.value)}
+
+                    />
+                    <button className="text-white p-2" onClick={() => createChatUser()}  >
+                        Add
+                    </button>
+                </div>
             </div>
         } else {
             return (<div className='bg-customBlue-light h-full pl-5 rounded-l-3xl overflow-auto w-full relative'>
-                <SearchField placeholder='enter chat name' search={search} onChange={setsearch} />
-                {renderChats()}
-                <div onClick={() => setisCreatingChat(true)} className='cursor-pointer rounded-full bottom-6 right-6 h-12 w-12 absolute bg-customBlue-dark text-white pt-3'>
-                    <svg className='block mx-auto my-auto text-white' width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path fill="currentColor" d="M11 11v-11h1v11h11v1h-11v11h-1v-11h-11v-1h11z" /></svg>
+                <div className='flex justify-between '>
+                    <div onClick={() => setisCreatingChat(true)} className='cursor-pointer rounded-full  h-12 w-12 bg-customBlue-dark text-white my-auto pt-3'>
+                        <svg className='block mx-auto my-auto text-white' width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path fill="currentColor" d="M11 11v-11h1v11h11v1h-11v11h-1v-11h-11v-1h11z" /></svg>
+                    </div>
+                    <SearchField placeholder='enter chat name' search={search} onChange={setsearch} />
                 </div>
+
+                {renderChats()}
+
             </div>);
         }
     }

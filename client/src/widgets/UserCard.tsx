@@ -4,7 +4,7 @@ import React from "react"
 function UserCard(props: UserCardProp): JSX.Element {
     return (
         <React.Fragment>
-            <div className={`hover:bg-customBlue-dark rounded-l-full  cursor-pointer p-6 w-full  flex items-center space-x-4 `}>
+            <div onClick={() => props.onClick()} className={`hover:bg-customBlue-dark rounded-l-full ${props.selected ? 'bg-customBlue-dark' : ''}  cursor-pointer p-6 w-full  flex items-center space-x-4 `}>
                 <div className="flex-shrink-0">
                     <img className="h-12 w-12 rounded-lg" src={props.image} alt="user" />
                 </div>
@@ -20,6 +20,8 @@ function UserCard(props: UserCardProp): JSX.Element {
 interface UserCardProp {
     username: string,
     email: string,
+    selected: boolean
+    onClick: Function
 
     id: string
     image: string

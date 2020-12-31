@@ -34,17 +34,18 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
         console.log('hello , i have been called', props.messages);
 
         props.subscribeToMore()
-    }, [props.messages])
+    }, [])
 
 
     const [sendMessage, { loading, error }] = useMutation<sendMessage, sendMessageVariables>(SEND_MESSAGE)
 
-    const ChatMessages = (props: chatMesagesProps) => {
+    const ChatMessages = () => {
         return (
             <React.Fragment>
-                {  props.chatMessages.map((message) => {
+                {  props.messages.map((message) => {
+                    const color = message.sender.id === props.user.id ? 'green-100' : 'white'
 
-                    return <Message key={message.id} color='green-100' message={message.message} user={message.sender.username} image="https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" />
+                    return <Message key={message.id} color={color} message={message.message} user={message.sender.username} image="https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80" />
                 })}
             </React.Fragment>
         );
@@ -60,7 +61,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
 
 
-                    <ChatMessages chatMessages={props.messages} />
+                    <ChatMessages />
 
 
 
@@ -75,7 +76,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
                         onChange={(e) => setMessage(e.target.value)}
 
                     ></textarea>
-                    <button className="m-2" onClick={() => sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message, sender: props.user.id, } } })} >
+                    <button className="m-2" onClick={() => { sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message, sender: props.user.id, } } }); setMessage('') }} >
                         <svg
                             className="svg-inline--fa text-customBlue-light fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2"
                             aria-hidden="true"

@@ -19,7 +19,7 @@ function Home(props: HomeProps) {
     const [currentChat, setCurrentChat] = useState('5fead5a45273cf3cf88a21df');
 
     const { ...result } = useQuery<chatMessages, chatMessagesVariables>(CHAT_MESSAGES, { variables: { id: currentChat } })
-    const subscribeToNewMessages =
+    const subscribeToNewMessages = () =>
         result.subscribeToMore<onChatMessage>({
             document: MESSAGE_ADDED,
             variables: { id: currentChat },
@@ -29,7 +29,7 @@ function Home(props: HomeProps) {
                 if (!subscriptionData.data) return prev
                 const newMessages = subscriptionData.data.onChatMessage
                 return Object.assign({}, prev, {
-                    chatMessages: [newMessages, ...prev.chatMessages]
+                    chatMessages: [...prev.chatMessages, newMessages,]
                 });
 
 

@@ -56,7 +56,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
         <React.Fragment>
             <div className=" relative h-full">
 
-                <div className='h-5/6 overflow-auto'>
+                <div className='h-full overflow-auto'>
 
 
 
@@ -68,7 +68,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
                 </div>
 
-                <div className="absolute bottom-0 left-0 right-0 w-full flex justify-between bg-blue-100 outline-none rounded-xl" >
+                <div className="absolute bottom-0 left-0 right-0 w-full h-16 flex justify-between bg-blue-100 outline-none rounded-xl" >
                     <textarea
                         className=" outline-none font-sans flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-50"
 

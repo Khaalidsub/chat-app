@@ -41,12 +41,12 @@ function Home(props: HomeProps) {
             <div className="flex justify-center">
 
 
-                <div className="md:h-2/3 md:w-4/5 h-full w-full mx-auto my-auto flex flex-row py-px border border-gray-50 bg-gray-50 rounded-3xl shadow-lg">
+                <div className="md:h-2/3 md:w-2/3  mx-auto my-auto flex flex-row py-px border border-gray-50 bg-gray-50 rounded-3xl shadow-lg">
                     <div className="md:w-2/5 md:flex hidden">
                         <Chats chats={data ? data.chats : []} onClick={setCurrentChat} />
                     </div>
 
-                    <div className="w-full">
+                    <div className="w-full pt-3 rounded-3xl">
                         <Chat subscribeToMore={() => subscribeToNewMessages()} messages={result.data ? result.data.chatMessages : []} user={props.currentUser} currentChat={currentChat} />
                     </div>
 

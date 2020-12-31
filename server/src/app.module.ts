@@ -27,7 +27,10 @@ import { autoPopulateAllFields } from 'mongoose-autopopulator';
     }),
     MongooseModule.forRoot(
       `mongodb://${process.env.DB || 'localhost'}/chat-system`,
+
       {
+        // auth: { user: process.env.USERNAME, password: process.env.PASSWORD },
+        // authSource: process.env.AUTH_SOURCE,
         connectionFactory: (connection) => {
           connection.plugin(autoPopulateAllFields);
 

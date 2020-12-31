@@ -1,11 +1,8 @@
-FROM mongo:4.4
-# ENV MONGO_INITDB_ROOT_USERNAME ="testing"
-# ENV MONGO_INITDB_DATABASE ="admin"
-# ENV MONGO_INITDB_ROOT_PASSWORD = "WER123"
-# RUN mkdir -p /data/db2 \
-#     && echo "dbpath = /data/db2" > /etc/mongodb.conf \
-#     && chown -R mongodb:mongodb /data/db2
-COPY ./init-mongo.js /docker-entrypoint-initdb.d
+FROM mongo:latest
+ENV MONGO_INITDB_ROOT_USERNAME=admin
+ENV MONGO_INITDB_ROOT_PASSWORD=password
+RUN mkdir -p data/db
+# COPY setup.js /docker-entrypoint-initdb.d/
 EXPOSE 27017
 VOLUME [ "/data/db" ]
 CMD ["mongod"]

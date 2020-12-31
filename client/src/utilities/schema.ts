@@ -56,6 +56,15 @@ export const CHATS = gql`
     }
   }
 `;
+export const USERS = gql`
+  query users {
+    users {
+      username
+      id
+      email
+    }
+  }
+`;
 
 export const MESSAGES = gql`
   query messages {

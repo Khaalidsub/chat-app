@@ -12,6 +12,7 @@ export interface ChatsProps {
     chats: chats_chats[]
     onClick: Function;
     currentUser: string
+    currentChat: string
 
 }
 
@@ -45,7 +46,8 @@ const Chats: React.FC<ChatsProps> = (props: ChatsProps) => {
 
     const renderChats = () => {
         return props.chats.map((chat) => {
-            return <ChatCard key={chat.id} onClick={props.onClick} id={chat.id} chat={chat.ChatName} description={chat.description} image={"https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80"} />;
+            const selected = chat.id === props.currentChat
+            return <ChatCard selected={selected} key={chat.id} onClick={props.onClick} id={chat.id} chat={chat.ChatName} description={chat.description} image={"https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80"} />;
         });
     }
     const renderUsers = () => {

@@ -18,16 +18,16 @@ function Home(props: HomeProps) {
     const [showChat, setshowChat] = useState(true)
     // useEffect(() => {
 
-    //     console.log(currentChat, showChat);
+    //     // if (showChat) setCurrentChat(null)
 
-    // }, [currentChat])
-
+    // }, [showChat])
+    const { ...result } = useQuery<chatMessages, chatMessagesVariables>(CHAT_MESSAGES, { variables: { id: currentChat } })
     const settingCurrentChat = (value: string) => {
         setCurrentChat(value)
         setshowChat(false);
     }
 
-    const { ...result } = useQuery<chatMessages, chatMessagesVariables>(CHAT_MESSAGES, { variables: { id: currentChat } })
+
     const subscribeToNewMessages = () =>
         result.subscribeToMore<onChatMessage>({
             document: MESSAGE_ADDED,
@@ -54,7 +54,7 @@ function Home(props: HomeProps) {
 
                 <div className="md:h-2/3 md:w-2/3 w-full h-4/5 px-4  mx-auto my-auto flex flex-row py-px border border-gray-50 bg-gray-50 rounded-3xl shadow-lg">
                     <div className={`md:w-2/5 md:flex w-full ${showChat ? '' : 'hidden'}`}>
-                        <Chats chats={data ? data.chats : []} onClick={settingCurrentChat} currentUser={props.currentUser.id} />
+                        <Chats currentChat={currentChat} chats={data ? data.chats : []} onClick={settingCurrentChat} currentUser={props.currentUser.id} />
                     </div>
 
                     <div className={`w-full md:w-3/5 pt-3 rounded-3xl md:block ${!showChat ? '' : 'hidden'} `}>

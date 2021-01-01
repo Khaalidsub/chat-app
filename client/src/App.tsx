@@ -23,12 +23,11 @@ function App() {
 
   // if (loading)
   //   return <RenderSign />
-  // if (error || !data)
-
-  //   return <RenderSign />
+  if (error || !data)
+    return <RenderSign />
 
   return (
-    data ? <Home currentUser={data.currentUser} /> : <RenderSign />
+    <Home currentUser={data.currentUser} />
 
 
   );

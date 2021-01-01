@@ -58,7 +58,7 @@ const Chats: React.FC<ChatsProps> = (props: ChatsProps) => {
         });
     }
     const renderUsers = () => {
-        const result = data ? data.users.filter((user) => user.email.includes(search) || users.includes(user.id)) : [];
+        const result = data ? data.users.filter((user) => (user.email.includes(search) || users.includes(user.id)) && user.id !== props.currentUser) : [];
         return result.map((user) => {
             const selected = users.find((selectedUser) => selectedUser === user.id) ? true : false;
 

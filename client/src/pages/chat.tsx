@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CHAT_MESSAGES, CURRENT_USER, MESSAGES, MESSAGE_ADDED, SEND_MESSAGE } from "../utilities/schema";
 import { chatMessages, chatMessagesVariables, chatMessages_chatMessages } from "../utilities/__generated__/chatMessages";
 import { currentUser, currentUser_currentUser } from "../utilities/__generated__/currentUser";
@@ -24,13 +24,19 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
     const [message, setMessage] = useState('');
 
+    const scrollChat = useRef<any>(null)
 
+    const scrollToBottom = () => {
+        scrollChat.current.scrollIntoView({ behavior: "smooth" })
+    }
 
+    useEffect(scrollToBottom, [props.chatMessages]);
 
     useEffect(() => {
         console.log('hello , i have been called', props.chatMessages);
 
         const unsubscribe = props.subscribeToMore();
+
         return () => unsubscribe()
     }, [props.chatMessages])
 
@@ -70,7 +76,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
                     <ChatMessages />
 
-
+                    <div ref={scrollChat} />
 
                 </div>
 

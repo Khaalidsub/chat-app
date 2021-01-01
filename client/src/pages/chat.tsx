@@ -30,8 +30,9 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
     useEffect(() => {
         console.log('hello , i have been called', props.chatMessages);
 
-        props.subscribeToMore()
-    }, [])
+        const unsubscribe = props.subscribeToMore();
+        return () => unsubscribe()
+    }, [props.chatMessages])
 
 
     const [sendMessage, { loading, error }] = useMutation<sendMessage, sendMessageVariables>(SEND_MESSAGE)
@@ -61,7 +62,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
         <React.Fragment>
             <div className=" relative h-full">
 
-                <div className='h-4/5 overflow-auto'>
+                <div className='h-4/5 w-full overflow-auto'>
 
 
 

@@ -2,7 +2,7 @@ import React from "react"
 
 
 function Message(props: MessageProp): JSX.Element {
-    const justify = props.current ? 'justify-end' : 'justify-end'
+    const justify = props.current ? 'justify-end' : 'justify-start'
     return (
         <div className={`w-full flex ${justify} items-start p-2 pr-5 pl-5`}>
             <div className="flex-shrink-0 m-2">

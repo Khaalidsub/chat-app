@@ -5,10 +5,8 @@ import { chatMessages, chatMessagesVariables } from '../utilities/__generated__/
 import { chats } from '../utilities/__generated__/chats'
 import { currentUser_currentUser } from '../utilities/__generated__/currentUser'
 import { onChatMessage } from '../utilities/__generated__/onChatMessage'
-import { onChatMessages } from '../utilities/__generated__/onChatMessages'
-import Message from '../widgets/Message'
-import Chat from './Chat'
-import Chats from './Chats'
+import Chat from './chat'
+import Chats from './chats'
 
 export interface HomeProps {
     currentUser: currentUser_currentUser
@@ -16,7 +14,7 @@ export interface HomeProps {
 
 function Home(props: HomeProps) {
     const { data, loading, error } = useQuery<chats>(CHATS)
-    const [currentChat, setCurrentChat] = useState('5fead5a45273cf3cf88a21df');
+    const [currentChat, setCurrentChat] = useState('');
 
     const { ...result } = useQuery<chatMessages, chatMessagesVariables>(CHAT_MESSAGES, { variables: { id: currentChat } })
     const subscribeToNewMessages = () =>
@@ -29,11 +27,12 @@ function Home(props: HomeProps) {
                 if (!subscriptionData.data) return prev
                 const newMessages = subscriptionData.data.onChatMessage
                 return Object.assign({}, prev, {
-                    chatMessages: [...prev.chatMessages, newMessages,]
+                    chatMessages: [...prev.chatMessages, newMessages]
                 });
 
 
             }
+
         })
 
     return (
@@ -47,7 +46,7 @@ function Home(props: HomeProps) {
                     </div>
 
                     <div className="w-full pt-3 rounded-3xl">
-                        <Chat subscribeToMore={() => subscribeToNewMessages()} messages={result.data ? result.data.chatMessages : []} user={props.currentUser} currentChat={currentChat} />
+                        {currentChat.length > 1 ? <Chat subscribeToMore={subscribeToNewMessages} chatMessages={result.data ? result.data.chatMessages : []} user={props.currentUser} currentChat={currentChat} /> : <div></div>}
                     </div>
 
                 </div>

@@ -10,17 +10,12 @@ import Message from "../widgets/Message";
 export interface ChatProps {
     currentChat: string
     user: currentUser_currentUser
-    messages: chatMessages_chatMessages[]
+    chatMessages: chatMessages_chatMessages[]
     subscribeToMore: Function
 }
 
-export interface ChatState {
 
-}
 
-export interface chatMesagesProps {
-    chatMessages: chatMessages_chatMessages[]
-}
 
 
 
@@ -30,8 +25,10 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
     const [message, setMessage] = useState('');
 
 
+
+
     useEffect(() => {
-        console.log('hello , i have been called', props.messages);
+        console.log('hello , i have been called', props.chatMessages);
 
         props.subscribeToMore()
     }, [])
@@ -39,10 +36,18 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
     const [sendMessage, { loading, error }] = useMutation<sendMessage, sendMessageVariables>(SEND_MESSAGE)
 
+    const onKeyPress = (e: any) => {
+        if (e.key === 'Enter') {
+            sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message, sender: props.user.id, } } })
+            setMessage('')
+        }
+
+
+    }
     const ChatMessages = () => {
         return (
             <React.Fragment>
-                {  props.messages.map((message) => {
+                {  props.chatMessages.map((message) => {
                     const current = message.sender.id === props.user.id ? true : false;
                     const color = message.sender.id === props.user.id ? 'green-100' : 'white';
 
@@ -56,7 +61,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
         <React.Fragment>
             <div className=" relative h-full">
 
-                <div className='h-full overflow-auto'>
+                <div className='h-4/5 overflow-auto'>
 
 
 
@@ -70,11 +75,15 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
                 <div className="absolute bottom-0 left-0 right-0 w-full h-16 flex justify-between bg-blue-100 outline-none rounded-xl" >
                     <textarea
-                        className=" outline-none font-sans flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-50"
+                        className=" outline-none font-sans flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-50 resize-none"
 
                         placeholder="Message..."
+
                         rows={1}
                         onChange={(e) => setMessage(e.target.value)}
+
+                        onKeyPress={onKeyPress}
+                        value={message}
 
                     ></textarea>
                     <button className="m-2" onClick={() => { sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message, sender: props.user.id, } } }); setMessage('') }} >

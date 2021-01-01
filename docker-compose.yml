@@ -17,6 +17,9 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./client
+    environment:
+      - APOLLO=api
+
   api:
     build:
       context: ./server
@@ -34,10 +37,13 @@ services:
     stdin_open: true
     tty: true
   mongodb:
-    image: "mongo:4.4"
+    image: "sleepinglotus/chat-mongodb"
+    build:
+      context: ./mongo
+      dockerfile: ./Dockerfile
     container_name: mongodb
     restart: always
     volumes:
-      - /data/db
+      - /data/db:/data/db
     ports:
       - "27017:27017"

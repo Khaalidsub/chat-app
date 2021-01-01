@@ -15,12 +15,13 @@ export class ChatResolver {
 
   @Mutation(() => Chat)
   @UseGuards(GqlAuthGuard)
-  createChat(
+  async createChat(
     @Args('createChatInput') createChatInput: CreateChatInput,
     @CurrentUser() user: User,
   ) {
     createChatInput.users.push(user.id);
-    return this.chatService.create(createChatInput);
+    const createdChat = await this.chatService.create(createChatInput);
+    return this.chatService.findOne(createdChat.id);
   }
 
   @Query(() => [Chat], { name: 'chats' })

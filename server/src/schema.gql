@@ -16,6 +16,7 @@ type Chat {
 }
 
 type Message {
+  id: ID!
   chat: Chat!
   message: String!
   sender: User!
@@ -33,6 +34,7 @@ type Query {
   user(id: String!): User!
   currentUser: User!
   messages: [Message!]!
+  chatMessages(id: String!): [Message!]!
   message(id: String!): Message!
 }
 
@@ -93,5 +95,5 @@ input UpdateMessageInput {
 }
 
 type Subscription {
-  messageAdded: Message!
+  onChatMessage(id: String!): Message!
 }

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CREATE_CHAT, USERS } from "../utilities/schema";
 import { chats_chats } from "../utilities/__generated__/chats";
 import { createChatVariables, createChat } from "../utilities/__generated__/createChat";
@@ -41,11 +41,18 @@ const Chats: React.FC<ChatsProps> = (props: ChatsProps) => {
             }
         })
 
+        setisCreatingChat(false)
+
 
     }
 
+    useEffect(() => {
+        setsearch('')
+    }, [isCreatingChat])
+
     const renderChats = () => {
-        return props.chats.map((chat) => {
+        const result = props.chats.filter((chat) => chat.ChatName.includes(search));
+        return result.map((chat) => {
             const selected = chat.id === props.currentChat
             return <ChatCard selected={selected} key={chat.id} onClick={props.onClick} id={chat.id} chat={chat.ChatName} description={chat.description} image={"https://images.unsplash.com/photo-1541250628459-d8f2f0157289?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjQzMzEwfQ&auto=format&fit=crop&w=1350&q=80"} />;
         });

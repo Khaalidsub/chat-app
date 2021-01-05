@@ -8,9 +8,12 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 let cache = new InMemoryCache();
 
-const api = process.env.NODE_ENV === 'development' ? 'localhost:3000' : 'localhost:8030'
+const api = process.env.NODE_ENV === 'development' ? 'localhost:3000' : 'localhost:8030/graphql';
+const ws = process.env.NODE_ENV === 'development' ? 'localhost:3000' : 'localhost:8030/graphql';
+
+
 const wsLink = new WebSocketLink({
-  uri: `ws://${process.env.APOLLO || api}/graphql`,
+  uri: `ws://${ws}`,
   options: {
     reconnect: true,
     connectionParams: {
@@ -20,7 +23,7 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = new HttpLink({
-  uri: `http://${process.env.APOLLO || api}/graphql`,
+  uri: `http://${api}`,
   headers: {
     authorization: 'Bearer ' + localStorage.getItem("token") || "",
   },

@@ -17,9 +17,12 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./client
+    ports:
+      - "3050:3050"
     environment:
       - APOLLO=api
-
+    depends_on:
+      - api
   api:
     build:
       context: ./server

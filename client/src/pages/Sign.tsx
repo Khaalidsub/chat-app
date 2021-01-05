@@ -1,6 +1,6 @@
 import React from "react";
-import SignUp from "./Register";
-import SignIn from "./Login";
+import SignUp from "./register";
+import SignIn from "./login";
 
 
 export interface SignProps { }

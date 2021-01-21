@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, NormalizedCacheObject, split } from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { authHttpLink, authWsLink } from './utilities/constants';
+
 let cache = new InMemoryCache();
 
 const api = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
@@ -14,19 +16,11 @@ const ws = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : '
 
 const wsLink = new WebSocketLink({
   uri: `ws://${ws}`,
-  options: {
-    reconnect: true,
-    connectionParams: {
-      authorization: 'Bearer ' + localStorage.getItem("token") || "",
-    },
-  }
 });
 
 const httpLink = new HttpLink({
   uri: `http://${api}`,
-  headers: {
-    authorization: 'Bearer ' + localStorage.getItem("token") || "",
-  },
+
 })
 
 const splitLink = split(
@@ -37,8 +31,8 @@ const splitLink = split(
       definition.operation === 'subscription'
     );
   },
-  wsLink,
-  httpLink,
+  authWsLink.concat(wsLink),
+  authHttpLink.concat(httpLink),
 );
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache,

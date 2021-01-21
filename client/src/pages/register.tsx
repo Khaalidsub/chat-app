@@ -3,23 +3,27 @@ import { creatUser, creatUserVariables } from '../utilities/__generated__/creatU
 import { CREATE_USER } from "../utilities/schema";
 import RegisterForm from "../Components/RegisterForm";
 export interface RegisterProps {
-
+    setsignType: Function
+    seterrorMessage: Function
 }
 
 export interface RegisterState {
 
 }
 
-function Register() {
-    const [register, { loading, error }] = useMutation<creatUser, creatUserVariables>(CREATE_USER,
+const Register: React.FC<RegisterProps> = (props: RegisterProps) => {
+    const [register, { loading, error, called }] = useMutation<creatUser, creatUserVariables>(CREATE_USER,
     )
     if (loading) {
         return <div>loading</div>
     }
     if (error) {
-        return <div>error</div>
+        props.seterrorMessage(error)
     }
+    if (called) {
+        props.setsignType()
 
+    }
 
     return (<RegisterForm register={register} />);
 

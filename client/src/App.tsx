@@ -1,6 +1,6 @@
 
-import { useQuery } from '@apollo/client';
-import React from 'react';
+import { NetworkStatus, useQuery } from '@apollo/client';
+import React, { useEffect } from 'react';
 
 import { CURRENT_USER } from './utilities/schema';
 import { currentUser } from './utilities/__generated__/currentUser';
@@ -9,9 +9,13 @@ import Home from './pages/Home';
 
 
 function App() {
-  const { data, loading, error } = useQuery<currentUser>(CURRENT_USER)
+  const { data, loading, error, refetch, networkStatus } = useQuery<currentUser>(CURRENT_USER, { notifyOnNetworkStatusChange: true, })
 
+  const refetchUser = () => {
 
+    refetch()
+
+  }
 
 
   const RenderSign = () => {
@@ -22,13 +26,15 @@ function App() {
 
 
 
-  // if (loading)
-  //   return <RenderSign />
-  if (error || !data)
-    return <RenderSign />
+
+  if (networkStatus === NetworkStatus.refetch) return <div>'Refetching!'</div>;
+  if (loading)
+    return <div>'loading!'</div>;
+  if (data && data.currentUser)
+    return <Home currentUser={data.currentUser} />
 
   return (
-    <Home currentUser={data.currentUser} />
+    <RenderSign />
 
 
   );

@@ -1,24 +1,29 @@
 import { useMutation } from "@apollo/client";
 import React from "react";
 import LoginForm from "../Components/LoginForm";
+import { AUTH_TOKEN } from "../utilities/constants";
 import { LOGIN_USER } from "../utilities/schema";
 import * as LoginTypes from "../utilities/__generated__/login";
 
 export interface LoginProps {
 
+    seterrorMessage: Function
+   
 }
 
 export interface LoginState {
 
 }
 
-function Login() {
-    const [login, { loading, error }] = useMutation<LoginTypes.login, LoginTypes.loginVariables>(LOGIN_USER, {
+const Login = (props: LoginProps) => {
+    const [login, { loading, error, }] = useMutation<LoginTypes.login, LoginTypes.loginVariables>(LOGIN_USER, {
         onCompleted(data) {
-            console.log(data);
 
 
-            localStorage.setItem('token', data.loginUser);
+
+            localStorage.setItem(AUTH_TOKEN, data.loginUser);
+
+           
 
         }
     })
@@ -26,8 +31,9 @@ function Login() {
         return <div>loading</div>
     }
     if (error) {
-        return <div>error</div>
+        props.seterrorMessage(error)
     }
+
     return (<LoginForm login={login} />);
 
 }

@@ -5,19 +5,25 @@ services:
       - api
       - client
     restart: always
+    container_name: chat-nginx
+    image: "sleepinglotus/chat-nginx-dev"
     build:
       dockerfile: Dockerfile.dev
       context: ./nginx
     ports:
-      - "3000:80"
+      - "80:80"
   client:
     stdin_open: true
     build:
       dockerfile: Dockerfile.dev
       context: ./client
+    container_name: chat-client
+    image: "sleepinglotus/chat-client-dev"
     volumes:
       - /app/node_modules
       - ./client:/app
+    ports:
+      - "3050:3000"
   api:
     build:
       context: ./server

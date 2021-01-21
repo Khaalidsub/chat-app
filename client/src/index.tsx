@@ -8,8 +8,8 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 let cache = new InMemoryCache();
 
-const api = process.env.NODE_ENV === 'development' ? 'localhost:3000' : 'localhost:8030/graphql';
-const ws = process.env.NODE_ENV === 'development' ? 'localhost:3000' : 'localhost:8030/graphql';
+const api = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
+const ws = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
 
 
 const wsLink = new WebSocketLink({

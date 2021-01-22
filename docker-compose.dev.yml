@@ -1,11 +1,11 @@
-version: "3.3"
+version: "3.7"
 services:
   nginx:
     depends_on:
       - api
       - client
     restart: always
-    container_name: chat-nginx
+    container_name: chat-nginx-dev
     image: "sleepinglotus/chat-nginx-dev"
     build:
       dockerfile: Dockerfile.dev
@@ -15,9 +15,9 @@ services:
   client:
     stdin_open: true
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./client
-    container_name: chat-client
+    container_name: chat-client-dev
     image: "sleepinglotus/chat-client-dev"
     volumes:
       - /app/node_modules
@@ -29,7 +29,7 @@ services:
       context: ./server
       dockerfile: ./Dockerfile.dev
     image: "khaalid-subaan/chat-api-dev:latest"
-    container_name: ChatAPI
+    container_name: ChatAPI-dev
     volumes:
       - /usr/src/app/node_modules
       - ./server:/usr/src/app

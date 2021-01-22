@@ -1,6 +1,6 @@
 FROM mongo:latest
-ENV MONGO_INITDB_ROOT_USERNAME=admin
-ENV MONGO_INITDB_ROOT_PASSWORD=password
+# ENV MONGO_INITDB_ROOT_USERNAME=admin
+# ENV MONGO_INITDB_ROOT_PASSWORD=password
 RUN mkdir -p data/db
 # COPY setup.js /docker-entrypoint-initdb.d/
 EXPOSE 27017

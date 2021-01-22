@@ -15,7 +15,7 @@ services:
   client:
     stdin_open: true
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
       context: ./client
     container_name: chat-client-dev
     image: "sleepinglotus/chat-client-dev"
@@ -28,7 +28,7 @@ services:
     build:
       context: ./server
       dockerfile: ./Dockerfile.dev
-    image: "khaalid-subaan/chat-api-dev:latest"
+    image: "sleepinglotus/chat-api-dev:latest"
     container_name: ChatAPI-dev
     volumes:
       - /usr/src/app/node_modules

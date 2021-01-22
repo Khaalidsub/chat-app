@@ -3,7 +3,7 @@ import { setContext } from "@apollo/client/link/context";
 export const AUTH_TOKEN = "auth-token";
 export const authHttpLink = setContext((_, { headers }) => {
   const token = localStorage.getItem(AUTH_TOKEN);
-  console.log("token", token);
+  // console.log("token", token);
 
   return {
     headers: {
@@ -14,7 +14,7 @@ export const authHttpLink = setContext((_, { headers }) => {
 });
 export const authWsLink = setContext((_, __) => {
   const token = localStorage.getItem(AUTH_TOKEN);
-  console.log("token", token);
+  // console.log("token", token);
   return {
     options: {
       reconnect: true,

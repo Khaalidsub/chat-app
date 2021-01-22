@@ -6964,10 +6964,10 @@ mongoose-autopopulate@^0.12.3:
   resolved "https://registry.yarnpkg.com/mongoose-autopopulate/-/mongoose-autopopulate-0.12.3.tgz#5bf111db3fa485f5031d3303f6f25625304888e3"
   integrity sha512-yNmYsfi6OpS/GQ+48mkB0KQ199ExHmmPrt3wt3fyxPHPMtEBGts7yq3wBQR6VgKCPOQaKvCI1URbJCPOtrPeLw==
 
-mongoose-autopopulator@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/mongoose-autopopulator/-/mongoose-autopopulator-1.0.0.tgz#0610ca79783bd0cf500bb94e1e821bde5d416215"
-  integrity sha512-nXBVxw7Byr9f4JYa7ZHwvOC+fX7kfgGncb0B3CpGxX++RfyUzldDUfMXMLwB7dRn5XHDckmdzWKLIseyCfz1WA==
+mongoose-autopopulator@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/mongoose-autopopulator/-/mongoose-autopopulator-1.1.0.tgz#9e66378cc873dba8a7281dbd447d68a94bfd43ca"
+  integrity sha512-sCV3W3jrMuZQ9aYEP6HF4uBE3+HkiLeHvYH0iusqm06J5yac7oRKx6ZE2qNPEbI9Op67q4OHAK5BPg1niku3hw==
   dependencies:
     np "^7.0.0"
     typescript "^4.1.3"

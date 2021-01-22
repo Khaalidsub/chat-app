@@ -95,5 +95,6 @@ input UpdateMessageInput {
 }
 
 type Subscription {
+  onChatCreations: Chat!
   onChatMessage(id: String!): Message!
 }

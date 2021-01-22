@@ -20,13 +20,12 @@ export class MessagesResolver {
     @CurrentUser() currentUser: User,
   ) {
     const newMessage = await this.messagesService.create(createMessageInput);
-    const message = await this.messagesService.findById(newMessage.id);
 
-    this.pubSub.publish(`onChatMessage:${createMessageInput.chat}`, {
-      onChatMessage: message,
+    this.pubSub.publish(`onChatMessage:${newMessage.chat}`, {
+      onChatMessage: newMessage,
     });
 
-    return this.messagesService.findById(message.id);
+    return newMessage;
   }
 
   @Query(() => [Message], { name: 'messages' })

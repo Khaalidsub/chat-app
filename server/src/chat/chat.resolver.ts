@@ -10,7 +10,7 @@ import { Chat } from './entities/chat.entity';
 
 @Resolver(() => Chat)
 export class ChatResolver {
-  // private pubSub = new PubSub();
+  private pubSub = new PubSub();
   constructor(private readonly chatService: ChatService) {}
 
   @Mutation(() => Chat)
@@ -21,6 +21,9 @@ export class ChatResolver {
   ) {
     createChatInput.users.push(user.id);
     const createdChat = await this.chatService.create(createChatInput);
+    this.pubSub.publish(`onChats:${user.id}`, {
+      onChats: createdChat,
+    });
     return this.chatService.findOne(createdChat.id);
   }
 
@@ -47,5 +50,11 @@ export class ChatResolver {
   @UseGuards(GqlAuthGuard)
   removeChat(@Args('id', { type: () => String }) id: string) {
     return this.chatService.remove(id);
+  }
+
+  @Subscription(() => Chat)
+  @UseGuards(GqlAuthGuard)
+  async onChatCreations(@CurrentUser() user: User) {
+    return this.pubSub.asyncIterator(`onChats:${user.id}`);
   }
 }

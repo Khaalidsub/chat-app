@@ -9,7 +9,7 @@ import Home from './pages/Home';
 
 
 function App() {
-  const { data, loading, error, refetch, networkStatus } = useQuery<currentUser>(CURRENT_USER, { notifyOnNetworkStatusChange: true, })
+  const { data, loading, error, refetch } = useQuery<currentUser>(CURRENT_USER, { notifyOnNetworkStatusChange: true, })
 
   const refetchUser = () => {
 
@@ -20,16 +20,16 @@ function App() {
 
   const RenderSign = () => {
     return <div className='flex justify-center'>
-      <Sign />
+      <Sign fetchCurrentUser={refetchUser} />
     </div>
   }
 
 
 
 
-  if (networkStatus === NetworkStatus.refetch) return <div>'Refetching!'</div>;
-  if (loading)
-    return <div>'loading!'</div>;
+
+  // if (loading)
+  //   return <div>'loading!'</div>;
   if (data && data.currentUser)
     return <Home currentUser={data.currentUser} />
 

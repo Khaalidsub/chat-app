@@ -8,7 +8,7 @@ import * as LoginTypes from "../utilities/__generated__/login";
 export interface LoginProps {
 
     seterrorMessage: Function
-   
+    refetchCurrentUser: Function
 }
 
 export interface LoginState {
@@ -17,13 +17,15 @@ export interface LoginState {
 
 const Login = (props: LoginProps) => {
     const [login, { loading, error, }] = useMutation<LoginTypes.login, LoginTypes.loginVariables>(LOGIN_USER, {
-        onCompleted(data) {
+        onCompleted(data?) {
 
 
+            if (data && data.loginUser) {
+                localStorage.setItem(AUTH_TOKEN, data.loginUser);
+            }
 
-            localStorage.setItem(AUTH_TOKEN, data.loginUser);
 
-           
+            // props.refetchCurrentUser()
 
         }
     })

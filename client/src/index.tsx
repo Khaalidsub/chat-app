@@ -6,45 +6,58 @@ import reportWebVitals from './reportWebVitals';
 import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, NormalizedCacheObject, split } from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { authHttpLink, authWsLink } from './utilities/constants';
+import { authHttpLink, AUTH_TOKEN } from './utilities/constants';
+import { useClient } from './ApolloClient';
 
-let cache = new InMemoryCache();
+// let cache = new InMemoryCache();
 
-const api = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
-const ws = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
+// const api = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
+// const ws = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
 
 
-const wsLink = new WebSocketLink({
-  uri: `ws://${ws}`,
-});
 
-const httpLink = new HttpLink({
-  uri: `http://${api}`,
+// const wsLink =
+//   new WebSocketLink({
 
-})
+//     uri: `ws://${ws}`,
+//     options: {
+//       reconnect: true,
+//       connectionParams: () => ({
+//         authorization: `Bearer ${localStorage.getItem(AUTH_TOKEN)}`,
+//       }),
+//     },
+//   })
 
-const splitLink = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
-    );
-  },
-  authWsLink.concat(wsLink),
-  authHttpLink.concat(httpLink),
-);
-const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  cache,
-  link: splitLink
+// const httpLink = new HttpLink({
+//   uri: `http://${api}`,
 
-});
-ReactDOM.render(
-  <React.StrictMode>
+// })
+
+// const splitLink = split(
+//   ({ query }) => {
+//     const definition = getMainDefinition(query);
+//     return (
+//       definition.kind === 'OperationDefinition' &&
+//       definition.operation === 'subscription'
+//     );
+//   },
+//   wsLink,
+//   authHttpLink.concat(httpLink),
+// );
+
+const RenderApp = () => {
+  const token = localStorage.getItem(AUTH_TOKEN);
+  const authClient = useClient(token);
+  const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({ ...authClient })
+  return (
     <ApolloProvider client={client}>
       <App />
-    </ApolloProvider>
+    </ApolloProvider>)
+}
+ReactDOM.render(
+  <React.StrictMode>
 
+    <RenderApp />
   </React.StrictMode>,
   document.getElementById('root')
 );

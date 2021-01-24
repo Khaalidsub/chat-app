@@ -3,7 +3,7 @@ import SignUp from "./register";
 import SignIn from "./login";
 
 export interface SignProps {
-
+    fetchCurrentUser: Function;
 }
 
 export interface SignState { }
@@ -36,7 +36,7 @@ const Sign: React.FC<SignProps> = (props: SignProps) => {
         );
     };
     const TypeForm = () => {
-        return signType === SignType.register ? <SignUp setsignType={() => setsignType(SignType.login)} seterrorMessage={seterrorMessage} /> : <SignIn seterrorMessage={seterrorMessage} />;
+        return signType === SignType.register ? <SignUp setsignType={() => setsignType(SignType.login)} seterrorMessage={seterrorMessage} /> : <SignIn seterrorMessage={seterrorMessage} refetchCurrentUser={props.fetchCurrentUser} />;
     };
     return (
         <div className=" w-2/3 my-auto">

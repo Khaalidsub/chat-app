@@ -32,6 +32,7 @@ class RegisterForm extends Component<RegisterProps, RegisterState> {
 
                 <InputFieldForm type="text" name="username" value={this.state.username} handler={this.onChange} label="Username" />
                 <InputFieldForm type="email" name='email' value={this.state.email} handler={this.onChange} label="Email" />
+                <InputFieldForm type="password" name='password' value={this.state.email} handler={this.onChange} label="Password" />
                 <div className='text-center block w-full'>
                     <ButtonForm value='register' />
                 </div>

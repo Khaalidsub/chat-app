@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../AuthContext";
 import LoginForm from "../Components/LoginForm";
 import { AUTH_TOKEN } from "../utilities/constants";
 import { LOGIN_USER } from "../utilities/schema";
@@ -16,16 +17,19 @@ export interface LoginState {
 }
 
 const Login = (props: LoginProps) => {
+    const { auth, setAuth } = useContext(AuthContext)
     const [login, { loading, error, }] = useMutation<LoginTypes.login, LoginTypes.loginVariables>(LOGIN_USER, {
         onCompleted(data?) {
 
 
             if (data && data.loginUser) {
-                localStorage.setItem(AUTH_TOKEN, data.loginUser);
+                localStorage.setItem(AUTH_TOKEN, data.loginUser)
+                setAuth(data.loginUser, props.refetchCurrentUser)
+
             }
 
 
-            // props.refetchCurrentUser()
+            // 
 
         }
     })

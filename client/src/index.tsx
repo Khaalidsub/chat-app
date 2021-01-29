@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -8,6 +8,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { authHttpLink, AUTH_TOKEN } from './utilities/constants';
 import { useClient } from './ApolloClient';
+import { AuthContext, AuthContextProvider } from './AuthContext';
 
 // let cache = new InMemoryCache();
 
@@ -45,19 +46,26 @@ import { useClient } from './ApolloClient';
 //   authHttpLink.concat(httpLink),
 // );
 
+
 const RenderApp = () => {
-  const token = localStorage.getItem(AUTH_TOKEN);
-  const authClient = useClient(token);
-  const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({ ...authClient })
+  const { auth } = useContext(AuthContext)
+  const authClient = useClient();
+  useEffect(() => {
+    console.log('in renderApp :', auth);
+  }, [auth])
+
+  // const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({ cache: authClient.cache, link: authClient.link })
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={authClient}>
       <App />
     </ApolloProvider>)
 }
 ReactDOM.render(
   <React.StrictMode>
+    <AuthContextProvider >
+      <RenderApp />
+    </AuthContextProvider>
 
-    <RenderApp />
   </React.StrictMode>,
   document.getElementById('root')
 );

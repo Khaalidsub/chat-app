@@ -11,6 +11,16 @@ export const authHttpLink = setContext((_, { headers }) => {
     },
   };
 });
+
+const asyncAuthLink = setContext(
+  (request) =>
+    new Promise((success, fail) => {
+      // do some async lookup here
+      setTimeout(() => {
+        success({ token: "async found token" });
+      }, 10);
+    })
+);
 // export const authWsLink = setContext((req,) => {
 //   const token = localStorage.getItem(AUTH_TOKEN);
 //   // console.log("token", token);'

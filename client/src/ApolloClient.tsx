@@ -4,18 +4,23 @@ import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { authHttpLink, AUTH_TOKEN } from "./utilities/constants";
-import { useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { AuthContext } from "./AuthContext";
 const api = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
 const ws = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
 const client = new ApolloClient({
     cache: new InMemoryCache()
 });
-export const useClient = (userId: string | null) => {
-    console.log('userid', userId);
+export const useClient = () => {
+    const { auth } = useContext(AuthContext)
+
+    useEffect(() => {
+        console.log('in appollo client :', auth);
+    }, [auth])
 
     const subscriptionClient = useRef<SubscriptionClient>()
     React.useEffect(() => {
-        if (userId) {
+        if (auth) {
             if (subscriptionClient.current) {
                 subscriptionClient.current.close()
             }
@@ -24,20 +29,24 @@ export const useClient = (userId: string | null) => {
                 {
                     reconnect: true,
                     connectionParams: {
-                        authorization: `Bearer ${localStorage.getItem(AUTH_TOKEN)}`,
+                        authorization: `Bearer ${auth}`,
                     }
                 }
             );
 
 
         }
-    }, [userId]);
+    }, [auth]);
     const splitLink = React.useMemo(() => {
         const httpLink = new HttpLink({
-            uri: `http://${api}`
+            uri: `http://${api}`,
+            headers: {
+                authorization: `Bearer ${auth}`,
+            }
+
         });
 
-        if (userId && subscriptionClient.current) {
+        if (auth && subscriptionClient.current) {
             const websocketLink = new WebSocketLink(subscriptionClient.current);
 
             return split(
@@ -49,16 +58,17 @@ export const useClient = (userId: string | null) => {
                     );
                 },
                 websocketLink,
-                authHttpLink.concat(httpLink)
+                httpLink
             );
         }
 
-        return authHttpLink.concat(httpLink);
-    }, [userId]);
+        return httpLink;
+    }, [auth]);
 
     React.useEffect(() => {
         client.setLink(splitLink);
     }, [splitLink]);
+
 
     return client;
 }

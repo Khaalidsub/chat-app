@@ -6,6 +6,6 @@ export class CreateMessageInput {
   chat: string;
   @Field(() => String)
   message: string;
-  @Field(() => String)
+
   sender: string;
 }

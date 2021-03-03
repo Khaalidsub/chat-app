@@ -1,13 +1,5 @@
-import { CreateMessageInput } from './create-message.input';
-import { InputType, Field, ID, OmitType } from '@nestjs/graphql';
-import { User } from 'src/users/entities/user.entity';
+import { InputType, PartialType } from '@nestjs/graphql';
+import { Message } from '../entities/message.entity';
 
 @InputType()
-export class UpdateMessageInput extends OmitType(CreateMessageInput, [
-  'sender',
-]) {
-  @Field(() => ID)
-  id: string;
-  @Field(() => User)
-  sender: User;
-}
+export class UpdateMessageInput extends PartialType(Message, InputType) {}

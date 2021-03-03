@@ -19,13 +19,16 @@ export class MessagesResolver {
     @Args('createMessageInput') createMessageInput: CreateMessageInput,
     @CurrentUser() currentUser: User,
   ) {
-    const newMessage = await this.messagesService.create(createMessageInput);
-
-    this.pubSub.publish(`onChatMessage:${newMessage.chat}`, {
-      onChatMessage: newMessage,
+    const newMessage = await this.messagesService.create({
+      ...createMessageInput,
+      sender: currentUser.id,
+    });
+    const message = await this.messagesService.findById(newMessage.id);
+    this.pubSub.publish(`onChatMessage:${message.chat}`, {
+      onChatMessage: message,
     });
 
-    return newMessage;
+    return message;
   }
 
   @Query(() => [Message], { name: 'messages' })
@@ -47,20 +50,20 @@ export class MessagesResolver {
     return this.messagesService.findOne(id);
   }
 
-  @Mutation(() => Message)
-  @UseGuards(GqlAuthGuard)
-  updateMessage(
-    @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
-    @CurrentUser() user: User,
-  ) {
-    if (updateMessageInput.sender.email === user.email) {
-      return this.messagesService.update(
-        updateMessageInput.id,
-        updateMessageInput,
-      );
-    }
-    throw new UnauthorizedException('You cant change this message');
-  }
+  // @Mutation(() => Message)
+  // @UseGuards(GqlAuthGuard)
+  // updateMessage(
+  //   @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
+  //   @CurrentUser() user: User,
+  // ) {
+  //   if (updateMessageInput.sender.email === user.email) {
+  //     return this.messagesService.update(
+  //       updateMessageInput.id,
+  //       updateMessageInput,
+  //     );
+  //   }
+  //   throw new UnauthorizedException('You cant change this message');
+  // }
 
   @Mutation(() => Message)
   @UseGuards(GqlAuthGuard)

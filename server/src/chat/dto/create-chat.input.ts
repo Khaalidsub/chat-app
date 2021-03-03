@@ -6,7 +6,6 @@ export class CreateChatInput {
   ChatName: string;
   @Field(() => String, { description: 'Description of the chat' })
   description: string;
-
   @Field(() => [String])
   users: string[];
 }

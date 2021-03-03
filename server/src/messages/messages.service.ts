@@ -5,7 +5,7 @@ import { Chat } from 'src/chat/entities/chat.entity';
 import { User } from '../users/entities/user.entity';
 
 import { CreateMessageInput } from './dto/create-message.input';
-import { Message, MessageDocument } from './schemas/message.schema';
+import { Message, MessageDocument } from './entities/message.entity';
 
 @Injectable()
 export class MessagesService {
@@ -35,7 +35,7 @@ export class MessagesService {
   }
 
   update(id: string, data: any) {
-    return this.MessageModel.findByIdAndUpdate(id, data).exec();
+    return this.MessageModel.findByIdAndUpdate(id, data, { new: true }).exec();
   }
 
   remove(id: string) {

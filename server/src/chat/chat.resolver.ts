@@ -21,8 +21,9 @@ export class ChatResolver {
   ) {
     createChatInput.users.push(user.id);
     const createdChat = await this.chatService.create(createChatInput);
+    const chat = await this.chatService.findOne(createdChat.id);
     this.pubSub.publish(`onChats:${user.id}`, {
-      onChats: createdChat,
+      onChats: chat,
     });
     return this.chatService.findOne(createdChat.id);
   }
@@ -34,11 +35,6 @@ export class ChatResolver {
 
     return chats;
   }
-
-  // @Query(() => Chat, { name: 'Chat' })
-  // findOne(@Args('id', { type: () => String }) id: string) {
-  //   return this.chatService.findOne(id);
-  // }
 
   @Mutation(() => Chat)
   @UseGuards(GqlAuthGuard)

@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 
@@ -24,6 +24,7 @@ import { autoPopulateAllFields } from 'mongoose-autopopulator';
       },
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       include: [ChatModule, UsersModule, MessagesModule, AuthModule],
+      sortSchema: true,
     }),
     MongooseModule.forRoot(
       `mongodb://${process.env.DB || 'localhost'}/chat-system`,

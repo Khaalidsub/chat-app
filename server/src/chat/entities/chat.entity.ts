@@ -20,4 +20,16 @@ export class Chat {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
   users: User[];
 }
+
+@InputType('InputChat')
+export class InputChat {
+  @Field(() => ID)
+  id: string;
+  @Field(() => String)
+  ChatName: string;
+  @Field(() => String)
+  description: string;
+  @Field(() => [User])
+  users: User[];
+}
 export const ChatSchema = SchemaFactory.createForClass(Chat);

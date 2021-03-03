@@ -2,59 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  username: String!
-  email: String!
-}
-
 type Chat {
-  id: ID!
   ChatName: String!
   description: String!
-  users: [User!]!
-}
-
-type Message {
   id: ID!
-  message: String!
-  sender: User!
-  chat: Chat!
+  users: [User!]!
 }
 
 input ChatUser {
+  email: String!
   id: ID!
   username: String!
-  email: String!
-}
-
-input InputChat {
-  id: ID!
-  ChatName: String!
-  description: String!
-  users: [ChatUser!]!
-}
-
-type Query {
-  chats: [Chat!]!
-  users: [User!]!
-  user(id: String!): User!
-  currentUser: User!
-  messages: [Message!]!
-  chatMessages(id: String!): [Message!]!
-  message(id: String!): Message!
-}
-
-type Mutation {
-  createChat(createChatInput: CreateChatInput!): Chat!
-  updateChat(updateChatInput: UpdateChatInput!): Chat!
-  removeChat(id: String!): Chat!
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: String!): User!
-  loginUser(username: String!, email: String!): String!
-  sendMessage(createMessageInput: CreateMessageInput!): Message!
-  removeMessage(id: String!): Message!
 }
 
 input CreateChatInput {
@@ -66,30 +24,72 @@ input CreateChatInput {
   users: [String!]!
 }
 
-input UpdateChatInput {
-  id: ID
-  ChatName: String
-  description: String
-  users: [ChatUser!]
-}
-
-input CreateUserInput {
-  username: String!
-  email: String!
-}
-
-input UpdateUserInput {
-  username: String
-  email: String
-  id: ID!
-}
-
 input CreateMessageInput {
   chat: String!
   message: String!
 }
 
+input CreateUserInput {
+  email: String!
+  username: String!
+}
+
+input InputChat {
+  ChatName: String!
+  description: String!
+  id: ID!
+  users: [ChatUser!]!
+}
+
+type Message {
+  chat: Chat!
+  id: ID!
+  message: String!
+  sender: User!
+}
+
+type Mutation {
+  createChat(createChatInput: CreateChatInput!): Chat!
+  createUser(createUserInput: CreateUserInput!): User!
+  loginUser(email: String!, username: String!): String!
+  removeChat(id: String!): Chat!
+  removeMessage(id: String!): Message!
+  removeUser(id: String!): User!
+  sendMessage(createMessageInput: CreateMessageInput!): Message!
+  updateChat(updateChatInput: UpdateChatInput!): Chat!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+}
+
+type Query {
+  chatMessages(id: String!): [Message!]!
+  chats: [Chat!]!
+  currentUser: User!
+  message(id: String!): Message!
+  messages: [Message!]!
+  user(id: String!): User!
+  users: [User!]!
+}
+
 type Subscription {
   onChatCreations: Chat!
   onChatMessage(id: String!): Message!
+}
+
+input UpdateChatInput {
+  ChatName: String
+  description: String
+  id: ID
+  users: [ChatUser!]
+}
+
+input UpdateUserInput {
+  email: String
+  id: ID
+  username: String
+}
+
+type User {
+  email: String!
+  id: ID!
+  username: String!
 }

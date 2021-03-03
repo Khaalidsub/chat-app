@@ -5,9 +5,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt/dist/jwt.service';
+import { UserDocument } from '../users/entities/user.entity';
 import { CreateUserInput } from '../users/dto/create-user.input';
 
-import { UserDocument } from '../users/schemas/user.schema';
 import { UsersService } from '../users/users.service';
 import { ICredential } from './types';
 

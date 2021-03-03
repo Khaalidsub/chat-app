@@ -4,7 +4,6 @@ import { Auth } from './entities/auth.entity';
 import { User } from '../users/entities/user.entity';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CurrentUser, GqlAuthGuard } from './guards/graph-auth.guard';
-import { UserDocument } from 'src/users/schemas/user.schema';
 
 @Resolver(() => Auth)
 export class AuthResolver {

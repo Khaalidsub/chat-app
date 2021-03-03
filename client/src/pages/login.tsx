@@ -9,7 +9,8 @@ import * as LoginTypes from "../utilities/__generated__/login";
 export interface LoginProps {
 
     seterrorMessage: Function
-    refetchCurrentUser: Function
+    goHome: Function
+
 }
 
 export interface LoginState {
@@ -24,8 +25,9 @@ const Login = (props: LoginProps) => {
 
             if (data && data.loginUser) {
                 localStorage.setItem(AUTH_TOKEN, data.loginUser)
-                setAuth(data.loginUser, props.refetchCurrentUser)
 
+                setAuth(data.loginUser)
+                props.goHome()
             }
 
 

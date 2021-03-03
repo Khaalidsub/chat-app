@@ -7,13 +7,14 @@ import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, NormalizedCacheO
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { authHttpLink, AUTH_TOKEN } from './utilities/constants';
-import { useClient } from './ApolloClient';
 import { AuthContext, AuthContextProvider } from './AuthContext';
+import { useClient } from './ApolloClient';
+
 
 // let cache = new InMemoryCache();
 
-// const api = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
-// const ws = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
+// const api = process.env.NODE_ENV === 'development' ? 'localhost:3001/graphql' : 'localhost/chat/graphql';
+// const ws = process.env.NODE_ENV === 'development' ? 'localhost:3001/graphql' : 'localhost/chat/graphql';
 
 
 
@@ -54,7 +55,8 @@ const RenderApp = () => {
     console.log('in renderApp :', auth);
   }, [auth])
 
-  // const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({ cache: authClient.cache, link: authClient.link })
+  // const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({ cache: cache, link: splitLink })
+
   return (
     <ApolloProvider client={authClient}>
       <App />

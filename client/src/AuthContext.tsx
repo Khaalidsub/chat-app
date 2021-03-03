@@ -5,16 +5,16 @@ import { AUTH_TOKEN } from "./utilities/constants"
 
 const defaultContext = {
     auth: localStorage.getItem(AUTH_TOKEN),
-    setAuth: (auth: any, getCurrentUser: any) => { },
+    setAuth: (auth: any) => { },
 
 }
 
 export const AuthContext = React.createContext(defaultContext)
 export const AuthContextProvider = (props: any) => {
-    const setAuth = (auth: any, getCurrentUser: any) => {
+    const setAuth = (auth: any) => {
 
         setstate({ ...state, auth: auth })
-        getCurrentUser();
+
     };
     const initState = {
         //@ts-ignore

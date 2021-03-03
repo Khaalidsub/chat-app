@@ -4,22 +4,24 @@ import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { authHttpLink, AUTH_TOKEN } from "./utilities/constants";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import { AuthContext } from "./AuthContext";
-const api = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
-const ws = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
+const api = process.env.NODE_ENV === 'development' ? 'localhost:3001/graphql' : 'localhost/chat/graphql';
+const ws = process.env.NODE_ENV === 'development' ? 'localhost:3001/graphql' : 'localhost/chat/graphql';
 const client = new ApolloClient({
     cache: new InMemoryCache()
 });
 export const useClient = () => {
     const { auth } = useContext(AuthContext)
 
-    useEffect(() => {
-        console.log('in appollo client :', auth);
-    }, [auth])
+    // useMemo(() => {
+    //     console.log('in appollo client :', auth);
+    // }, [auth])
 
     const subscriptionClient = useRef<SubscriptionClient>()
-    React.useEffect(() => {
+    useMemo(() => {
+        // console.log('Here in auth subscriptionClient', auth);
+
         if (auth) {
             if (subscriptionClient.current) {
                 subscriptionClient.current.close()
@@ -37,7 +39,8 @@ export const useClient = () => {
 
         }
     }, [auth]);
-    const splitLink = React.useMemo(() => {
+    const splitLink = useMemo(() => {
+        // console.log('Here in auth Split Link', auth);
         const httpLink = new HttpLink({
             uri: `http://${api}`,
             headers: {
@@ -65,7 +68,8 @@ export const useClient = () => {
         return httpLink;
     }, [auth]);
 
-    React.useEffect(() => {
+    useMemo(() => {
+        // console.log('Here in auth Combo', auth);
         client.setLink(splitLink);
     }, [splitLink]);
 

@@ -1,4 +1,11 @@
-import { Resolver, Query, Mutation, Args, Subscription } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Subscription,
+  Context,
+} from '@nestjs/graphql';
 import { MessagesService } from './messages.service';
 import { Message } from './entities/message.entity';
 import { CreateMessageInput } from './dto/create-message.input';
@@ -10,7 +17,6 @@ import { UnauthorizedException, UseGuards } from '@nestjs/common';
 
 @Resolver(() => Message)
 export class MessagesResolver {
-  private pubSub = new PubSub();
   constructor(private readonly messagesService: MessagesService) {}
 
   @Mutation(() => Message)
@@ -18,13 +24,14 @@ export class MessagesResolver {
   async sendMessage(
     @Args('createMessageInput') createMessageInput: CreateMessageInput,
     @CurrentUser() currentUser: User,
+    @Context('pubSub') pubSub: PubSub,
   ) {
     const newMessage = await this.messagesService.create({
       ...createMessageInput,
       sender: currentUser.id,
     });
     const message = await this.messagesService.findById(newMessage.id);
-    this.pubSub.publish(`onChatMessage:${message.chat}`, {
+    pubSub.publish(`onChatMessage:${message.chat.id}`, {
       onChatMessage: message,
     });
 
@@ -39,9 +46,9 @@ export class MessagesResolver {
   @Query(() => [Message], { name: 'chatMessages' })
   @UseGuards(GqlAuthGuard)
   findChatMessages(@CurrentUser() user: User, @Args('id') chatId: string) {
-    console.log('in chat', chatId);
-
-    return this.messagesService.findQuery({ chat: chatId });
+    return chatId.trim()
+      ? this.messagesService.findQuery({ chat: chatId })
+      : [Message];
   }
 
   @Query(() => Message, { name: 'message' })
@@ -82,7 +89,10 @@ export class MessagesResolver {
 
   @Subscription(() => Message)
   @UseGuards(GqlAuthGuard)
-  async onChatMessage(@Args('id') chatId: string) {
-    return this.pubSub.asyncIterator(`onChatMessage:${chatId}`);
+  async onChatMessage(
+    @Args('id') chatId: string,
+    @Context('pubSub') pubSub: PubSub,
+  ) {
+    return pubSub.asyncIterator(`onChatMessage:${chatId}`);
   }
 }

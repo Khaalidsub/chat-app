@@ -1,5 +1,12 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Query,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { CurrentUser, GqlAuthGuard } from 'src/auth/guards/graph-auth.guard';
 import { User } from 'src/users/entities/user.entity';
@@ -10,7 +17,6 @@ import { Chat } from './entities/chat.entity';
 
 @Resolver(() => Chat)
 export class ChatResolver {
-  private pubSub = new PubSub();
   constructor(private readonly chatService: ChatService) {}
 
   @Mutation(() => Chat)
@@ -18,13 +24,17 @@ export class ChatResolver {
   async createChat(
     @Args('createChatInput') createChatInput: CreateChatInput,
     @CurrentUser() user: User,
+    @Context('pubSub') pubSub: PubSub,
   ) {
     createChatInput.users.push(user.id);
     const createdChat = await this.chatService.create(createChatInput);
     const chat = await this.chatService.findOne(createdChat.id);
-    this.pubSub.publish(`onChats:${user.id}`, {
-      onChats: chat,
-    });
+    for (const user of chat.users) {
+      pubSub.publish(`onChatCreations:${user.id}`, {
+        onChatCreations: chat,
+      });
+    }
+
     return this.chatService.findOne(createdChat.id);
   }
 
@@ -50,7 +60,12 @@ export class ChatResolver {
 
   @Subscription(() => Chat)
   @UseGuards(GqlAuthGuard)
-  async onChatCreations(@CurrentUser() user: User) {
-    return this.pubSub.asyncIterator(`onChats:${user.id}`);
+  async onChatCreations(
+    @CurrentUser() user: User,
+    @Context('pubSub') pubSub: PubSub,
+  ) {
+    console.log(user);
+
+    return pubSub.asyncIterator(`onChatCreations:${user.id}`);
   }
 }

@@ -16,6 +16,7 @@ export interface chatMessages_chatMessages_sender {
 export interface chatMessages_chatMessages_chat {
   __typename: "Chat";
   id: string;
+  ChatName: string;
 }
 
 export interface chatMessages_chatMessages {

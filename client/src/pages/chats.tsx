@@ -13,6 +13,7 @@ export interface ChatsProps {
     onClick: Function;
     currentUser: string
     currentChat: string
+    subscribeToMore: Function
 
 }
 
@@ -45,6 +46,13 @@ const Chats: React.FC<ChatsProps> = (props: ChatsProps) => {
 
 
     }
+    useEffect(() => {
+        console.log('hello , i have been called', props.chats);
+
+        const unsubscribe = props.subscribeToMore();
+
+        return () => unsubscribe()
+    }, [props.chats])
 
     useEffect(() => {
         setsearch('')

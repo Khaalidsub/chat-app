@@ -1,9 +1,10 @@
-import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useRef, useState } from "react";
+import { useMutation, useQuery, useSubscription } from "@apollo/client";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { CHAT_MESSAGES, CURRENT_USER, MESSAGES, MESSAGE_ADDED, SEND_MESSAGE } from "../utilities/schema";
 import { chatMessages, chatMessagesVariables, chatMessages_chatMessages } from "../utilities/__generated__/chatMessages";
 import { currentUser, currentUser_currentUser } from "../utilities/__generated__/currentUser";
 import { messages } from "../utilities/__generated__/messages";
+import { onChatMessageVariables, onChatMessage_onChatMessage } from "../utilities/__generated__/onChatMessage";
 import { sendMessage, sendMessageVariables } from "../utilities/__generated__/sendMessage";
 import Message from "../widgets/Message";
 
@@ -23,7 +24,7 @@ export interface ChatProps {
 const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
     const [message, setMessage] = useState('');
-
+    // const { data } = useSubscription<onChatMessage_onChatMessage, onChatMessageVariables>(MESSAGE_ADDED, { variables: { id: props.currentChat, } })
     const scrollChat = useRef<any>(null)
 
     const scrollToBottom = () => {
@@ -39,18 +40,32 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
 
         return () => unsubscribe()
     }, [props.chatMessages])
+    // useEffect(() => {
+    //     console.log(data);
+
+    //     // props.chatMessages.push({chat:data?.chat,})
+
+    // }, [data])
 
 
     const [sendMessage, { loading, error }] = useMutation<sendMessage, sendMessageVariables>(SEND_MESSAGE)
 
     const onKeyPress = (e: any) => {
+
+
         if (e.key === 'Enter') {
-            sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message, sender: props.user.id, } } })
+            console.log({ chat: props.currentChat, message: message, sender: props.user.id, });
+
+            sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message } } }).catch((error) => {
+                console.log(error);
+
+            })
             setMessage('')
         }
 
 
     }
+
     const ChatMessages = () => {
         return (
             <React.Fragment>
@@ -93,7 +108,7 @@ const Chat: React.FC<ChatProps> = (props: ChatProps) => {
                         value={message}
 
                     ></textarea>
-                    <button className="m-2" onClick={() => { sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message, sender: props.user.id, } } }); setMessage('') }} >
+                    <button className="m-2" onClick={() => { sendMessage({ variables: { createMessageInput: { chat: props.currentChat, message: message } } }); setMessage('') }} >
                         <svg
                             className="svg-inline--fa text-customBlue-light fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2"
                             aria-hidden="true"

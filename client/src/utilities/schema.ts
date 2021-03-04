@@ -72,9 +72,11 @@ export const MESSAGES = gql`
       message
       sender {
         id
+        username
       }
       chat {
         id
+        ChatName
       }
     }
   }
@@ -90,6 +92,7 @@ export const CHAT_MESSAGES = gql`
       }
       chat {
         id
+        ChatName
       }
     }
   }
@@ -127,6 +130,19 @@ export const MESSAGE_ADDED = gql`
       chat {
         id
       }
+    }
+  }
+`;
+export const CHAT_ADDED = gql`
+  subscription onChatCreated {
+    onChatCreations {
+      ChatName
+      users {
+        username
+        id
+      }
+      id
+      description
     }
   }
 `;

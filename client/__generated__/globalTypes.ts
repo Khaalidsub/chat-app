@@ -16,12 +16,11 @@ export interface CreateChatInput {
 export interface CreateMessageInput {
   chat: string;
   message: string;
-  sender: string;
 }
 
 export interface CreateUserInput {
-  username: string;
   email: string;
+  username: string;
 }
 
 //==============================================================

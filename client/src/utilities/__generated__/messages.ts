@@ -10,11 +10,13 @@
 export interface messages_messages_sender {
   __typename: "User";
   id: string;
+  username: string;
 }
 
 export interface messages_messages_chat {
   __typename: "Chat";
   id: string;
+  ChatName: string;
 }
 
 export interface messages_messages {

@@ -4,23 +4,23 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: chats
+// GraphQL subscription operation: onChatCreated
 // ====================================================
 
-export interface chats_chats_users {
+export interface onChatCreated_onChatCreations_users {
   __typename: "User";
   username: string;
   id: string;
 }
 
-export interface chats_chats {
+export interface onChatCreated_onChatCreations {
   __typename: "Chat";
   ChatName: string;
-  users: chats_chats_users[];
+  users: onChatCreated_onChatCreations_users[];
   id: string;
   description: string;
 }
 
-export interface chats {
-  chats: chats_chats[];
+export interface onChatCreated {
+  onChatCreations: onChatCreated_onChatCreations;
 }

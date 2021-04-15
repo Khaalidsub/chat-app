@@ -8,6 +8,11 @@ services:
       - '80:80'
     depends_on:
       - api
+  redis:
+    image: 'redis'
+    container_name: redis
+    ports:
+      - '6379:6379'
   api:
     build:
       context: .

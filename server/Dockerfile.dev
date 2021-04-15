@@ -1,6 +1,6 @@
 FROM node:12-alpine As development
 
-RUN apk update && apk add build-base git python
+
 
 WORKDIR /usr/src/app
 

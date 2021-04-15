@@ -1,18 +1,21 @@
 import { useQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
-import { CHATS, CHAT_MESSAGES, MESSAGE_ADDED } from '../utilities/schema'
+import { CHATS, CHAT_MESSAGES, CURRENT_USER, MESSAGE_ADDED } from '../utilities/schema'
 import { chatMessages, chatMessagesVariables } from '../utilities/__generated__/chatMessages'
 import { chats } from '../utilities/__generated__/chats'
 import { currentUser_currentUser } from '../utilities/__generated__/currentUser'
 import { onChatMessage } from '../utilities/__generated__/onChatMessage'
 import Chat from '../components/chat'
 import Chats from '../components/chats'
+import { initializeApollo } from '../lib/apolloClient'
 
 export interface HomeProps {
     currentUser: currentUser_currentUser
 }
 
 function Home(props: HomeProps) {
+    console.log('home', props);
+
     const { data, loading, error } = useQuery<chats>(CHATS)
     const [currentChat, setCurrentChat] = useState('');
     const [showChat, setshowChat] = useState(true)
@@ -67,5 +70,19 @@ function Home(props: HomeProps) {
             </div>
         </React.Fragment>
     )
+}
+
+export async function getStaticProps() {
+    const apolloClient = initializeApollo()
+    await apolloClient.query({
+        query: CURRENT_USER,
+    })
+    // const { data, loading, error } = useQuery<chats>(CHATS)
+    return {
+        props: {
+            initialApolloState: apolloClient.cache.extract(),
+        },
+        revalidate: 1,
+    };
 }
 export default Home

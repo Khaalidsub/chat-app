@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -8,6 +8,7 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { CurrentUser, GqlAuthGuard } from 'src/auth/guards/graph-auth.guard';
 import { User } from 'src/users/entities/user.entity';
 import { ChatService } from './chat.service';
@@ -17,6 +18,7 @@ import { Chat } from './entities/chat.entity';
 
 @Resolver(() => Chat)
 export class ChatResolver {
+  private logger: Logger = new Logger(ChatResolver.name);
   constructor(private readonly chatService: ChatService) {}
 
   @Mutation(() => Chat)
@@ -26,12 +28,15 @@ export class ChatResolver {
     @CurrentUser() user: User,
     @Context('pubSub') pubSub: PubSub,
   ) {
+    const list = new Set<string>();
     createChatInput.users.push(user.id);
+
     const createdChat = await this.chatService.create(createChatInput);
     const chat = await this.chatService.findOne(createdChat.id);
+    console.log('Here on chat list', { ...chat });
     for (const user of chat.users) {
       pubSub.publish(`onChatCreations:${user.id}`, {
-        onChatCreations: chat,
+        onChatCreations: { ...chat } as Chat,
       });
     }
 
@@ -62,9 +67,11 @@ export class ChatResolver {
   @UseGuards(GqlAuthGuard)
   async onChatCreations(
     @CurrentUser() user: User,
-    @Context('pubSub') pubSub: PubSub,
+    @Context('pubSub') pubSub: RedisPubSub,
   ) {
-    console.log(user);
+    pubSub.subscribe(`onChatCreations:${user.id}`, (data) =>
+      console.error(data),
+    );
 
     return pubSub.asyncIterator(`onChatCreations:${user.id}`);
   }

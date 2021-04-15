@@ -9,11 +9,11 @@ import {
 import { MessagesService } from './messages.service';
 import { Message } from './entities/message.entity';
 import { CreateMessageInput } from './dto/create-message.input';
-import { UpdateMessageInput } from './dto/update-message.input';
 import { PubSub } from 'apollo-server-express';
 import { CurrentUser, GqlAuthGuard } from '../auth/guards/graph-auth.guard';
 import { User } from 'src/users/entities/user.entity';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 
 @Resolver(() => Message)
 export class MessagesResolver {
@@ -31,8 +31,10 @@ export class MessagesResolver {
       sender: currentUser.id,
     });
     const message = await this.messagesService.findById(newMessage.id);
+    console.log('Here on chat messages', message);
+
     pubSub.publish(`onChatMessage:${message.chat.id}`, {
-      onChatMessage: message,
+      onChatMessage: { ...message } as Message,
     });
 
     return message;
@@ -91,7 +93,7 @@ export class MessagesResolver {
   @UseGuards(GqlAuthGuard)
   async onChatMessage(
     @Args('id') chatId: string,
-    @Context('pubSub') pubSub: PubSub,
+    @Context('pubSub') pubSub: RedisPubSub,
   ) {
     return pubSub.asyncIterator(`onChatMessage:${chatId}`);
   }

@@ -6,8 +6,8 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import { authHttpLink, AUTH_TOKEN } from "./utilities/constants";
 import { useContext, useEffect, useRef } from "react";
 import { AuthContext } from "./AuthContext";
-const api = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
-const ws = process.env.NODE_ENV === 'development' ? 'localhost/chat/graphql' : 'localhost/chat/graphql';
+const api = process.env.NODE_ENV === 'development' ? 'localhost:3001/graphql' : 'localhost/chat/graphql';
+const ws = process.env.NODE_ENV === 'development' ? 'localhost:3001/graphql' : 'localhost/chat/graphql';
 const client = new ApolloClient({
     cache: new InMemoryCache()
 });

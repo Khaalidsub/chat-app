@@ -9,7 +9,21 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MessagesModule } from './messages/messages.module';
 import { autoPopulateAllFields } from 'mongoose-autopopulator';
 import { PubSub } from 'apollo-server-express';
-const pubSub = new PubSub();
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import * as Redis from 'ioredis';
+const options = {
+  host: 'redis',
+  port: 6379,
+  retryStrategy: (times) => {
+    // reconnect after
+    return Math.min(times * 50, 2000);
+  },
+};
+const pubSub = new RedisPubSub({
+  publisher: new Redis(options),
+  subscriber: new Redis(options),
+});
+
 console.log(process.env.ENGINE_API_KEY);
 
 @Module({

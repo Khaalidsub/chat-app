@@ -17,7 +17,10 @@ export class Chat {
   @Prop()
   description: string;
   @Field(() => [User])
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    default: [],
+  })
   users: User[];
 }
 

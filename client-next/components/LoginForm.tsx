@@ -13,14 +13,18 @@ export interface LoginState {
 const LoginForm = (props: LoginProps) => {
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
+    const onChange = (event: any) => {
+        if (event.target.name === 'email') setEmail(event.target.value)
+        if (event.target.name === 'username') setUsername(event.target.value)
+    }
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.login({ variables: { email: email, username: username } })
     }
     return (<form onSubmit={onSubmit}>
-
-        <InputFieldForm type="text" name="username" value={username} handler={setUsername} label="Username" />
-        <InputFieldForm type="email" name='email' value={email} handler={setEmail} label="Email" />
+        hello
+        <InputFieldForm type="text" name="username" value={username} handler={e => setUsername(e.target.value)} label="Username" />
+        <InputFieldForm type="email" name='email' value={email} handler={e => setEmail(e.target.value)} label="Email" />
         <div className='text-center block w-full'>
             <ButtonForm value='login' />
         </div>

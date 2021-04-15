@@ -37,3 +37,10 @@ const asyncAuthLink = setContext(
 //     },
 //   };
 // });
+export const isLocalStorage = (isNode) => {
+  if (isNode) {
+    if (typeof window !== "undefined") return localStorage.getItem(AUTH_TOKEN);
+    return "";
+  }
+  return "";
+};

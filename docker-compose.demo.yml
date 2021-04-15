@@ -1,0 +1,51 @@
+version: "3.7"
+services:
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    container_name: chat-nginx-dev
+    image: "sleepinglotus/chat-nginx-dev"
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - "80:80"
+  client:
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client-next
+    container_name: chat-client-next-dev
+    image: "sleepinglotus/chat-client-next-dev"
+    volumes:
+      - /app/node_modules
+      - ./client-next:/app
+    ports:
+      - "3050:3000"
+  api:
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    image: "sleepinglotus/chat-api-dev:latest"
+    container_name: ChatAPI-dev
+    ports:
+      - "8030:3000"
+    environment:
+      - PORT=3000
+      - SECRET="secretKey"
+      - DB=mongodb
+    depends_on:
+      - mongodb
+    stdin_open: true
+    tty: true
+  mongodb:
+    image: "mongo:4.4"
+    container_name: mongodb
+    build:
+      dockerfile: ./Dockerfile.dev
+      context: ./mongo
+    restart: always
+    ports:
+      - "27017:27017"
